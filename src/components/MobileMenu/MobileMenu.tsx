@@ -1,0 +1,41 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { MdClose } from 'react-icons/md';
+import { selectIsOpen } from '../../redux/mobileMenu/selectors';
+import NavBar from '../NavBar/NavBar';
+import type { AppDispatch } from '../../redux/store';
+import { closeMenu } from '../../redux/mobileMenu/slice';
+import AuthNav from '../AuthNav/AuthNav';
+
+export default function MobileMenu() {
+    const isOpen = useSelector(selectIsOpen);
+    const dispatch: AppDispatch = useDispatch();
+    return (
+        <>
+            <div
+                className={`fixed inset-0 z-40  transition-opacity duration-300 transitionFunction ${
+                    isOpen
+                        ? 'opacity-100 pointer-events-auto'
+                        : 'opacity-0 pointer-events-none'
+                }`}
+                onClick={() => dispatch(closeMenu())}
+            />
+
+            <div
+                className={`w-[218px] md:w-[374px] fixed top-0 right-0 h-full bg-yellow-50 z-50 transition-all duration-500 transitionFunction ${
+                    isOpen
+                        ? 'translate-x-0 opacity-100 pointer-events-auto'
+                        : 'translate-x-full opacity-0 pointer-events-none'
+                }`}
+            >
+                <div className=" h-full flex flex-col justify-between items-center pb-[40px] px-[20px] md:px-[49px] pt-[39px]">
+                    <MdClose
+                        className="w-[32px] h-[32px] cursor-pointer self-end"
+                        onClick={() => dispatch(closeMenu())}
+                    />
+                    <NavBar isMobile />
+                    <AuthNav isMobile />
+                </div>
+            </div>
+        </>
+    );
+}

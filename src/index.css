@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap');
+@import "tailwindcss";
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: Manrope, sans-serif;
+  line-height: 20px;
+  font-weight: 500;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --Main: #262626;
+  --Yellow: #F6B83D;
+  --Light-yellow: #FFF4DF;
+}
+
+body {
+  background-color: #f9f9f9;
+}
+
+@layer utilities {
+  .adaptive-container {
+    margin: 0 auto;
+    max-width: 375px;
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  @media screen and (min-width: 768px) {
+    .adaptive-container {
+      max-width: 768px;
+      padding: 0 32px;
+    }
+  }
+
+  @media screen and (min-width: 1280px) {
+    .adaptive-container {
+      max-width: 1280px;
+      padding: 0 64px;
+    }
+  }
+
+  .transitionFunction {
+    transition-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  }
+
+}
