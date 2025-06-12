@@ -11,19 +11,19 @@ export default function NotFoundPage() {
                     <div>
                         <picture>
                             <source
-                                srcSet="/public/images/not-found-mobile.png 1x, /public/images/not-found-mobile@2x.png 2x"
+                                srcSet="/images/not-found-mobile.png 1x, /images/not-found-mobile@2x.png 2x"
                                 media="(max-width: 767px)"
                             />
                             <source
-                                srcSet="/public/images/not-found-tablet.png 1x, /public/images/not-found-tablet@2x.png 2x"
+                                srcSet="/images/not-found-tablet.png 1x, /images/not-found-tablet@2x.png 2x"
                                 media="(min-width: 768px)"
                             />
                             <source
-                                srcSet="/public/images/not-found-desc.png 1x, /public/images/not-found-desc@2x.png 2x"
+                                srcSet="/images/not-found-desc.png 1x, /images/not-found-desc@2x.png 2x"
                                 media="(min-width: 1280px)"
                             />
                             <img
-                                src="/public/images/not-found-mobile.png"
+                                src="/images/not-found-mobile.png"
                                 alt=""
                                 className="rounded-full bg-[#FFFFFF1A]"
                             />
