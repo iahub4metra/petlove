@@ -12,7 +12,7 @@ export default function AuhtPetBlock() {
         : null;
 
     return (
-        <div className="relative rounded-[30px] xl:h-[654px] bg-[#F6B83D] recktangle bg-[url(/images/Rectangle.png)] bg-no-repeat bg-bottom-right bg-size-[300px_241px] md:bg-size-[528px_251px] md:bg-position-[125px_bottom] xl:w-[592px] xl:bg-[url(/images/bg-pet-desc.png)] xl:bg-size-[512px_598px] xl:bg-position-[center_bottom]">
+        <div className="relative rounded-[30px] shrink-0 xl:h-[654px] bg-[#F6B83D] recktangle bg-[url(/images/Rectangle.png)] bg-no-repeat bg-bottom-right bg-size-[300px_241px] md:bg-size-[528px_251px] md:bg-position-[125px_bottom] xl:w-[592px] xl:bg-[url(/images/bg-pet-desc.png)] xl:bg-size-[512px_598px] xl:bg-position-[center_bottom]">
             <picture>
                 <source
                     srcSet={`${imagePrefix}/mobile.png 1x, ${imagePrefix}/mobile@2x.png 2x`}
