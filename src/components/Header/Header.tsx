@@ -25,9 +25,9 @@ export default function Header() {
                 </Link>
                 <NavBar />
                 <div className="flex items-center gap-4">
-                    {!dispatch && <AuthNav />}
-                    <LogOutBtn />
-                    <UserBar />
+                    {<AuthNav />}
+                    {!dispatch && <LogOutBtn />}
+                    {!dispatch && <UserBar />}
                     <IoMenu
                         className="min-xl:hidden w-[32px] h-[32px] md:w-[36px] md:h-[36px] cursor-pointer"
                         onClick={() => dispatch(openMenu())}
