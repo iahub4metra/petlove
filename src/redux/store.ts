@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { mobileMenuReducer } from './mobileMenu/slice';
+import { uiReducer } from './uiState/slice';
+import { authReducer } from './auth/slice';
 
 const store = configureStore({
     reducer: {
-        menu: mobileMenuReducer,
+        menu: uiReducer,
+        auth: authReducer,
     },
 });
 
