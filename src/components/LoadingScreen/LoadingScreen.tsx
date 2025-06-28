@@ -1,10 +1,14 @@
-import { Box, CircularProgress, Typography } from '@mui/material';
+import {
+    Box,
+    CircularProgress,
+    Typography,
+    useMediaQuery,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { FaHeart } from 'react-icons/fa6';
 
 export default function LoadingScreen() {
     const [progress, setProgress] = useState(85);
-    //const [isVisible, setIsVisible] = useState(true);
     const isLoading = progress < 100;
 
     useEffect(() => {
@@ -16,8 +20,14 @@ export default function LoadingScreen() {
         };
     }, [progress]);
 
+    let size = 270;
+
+    const isTablet = useMediaQuery('(min-width: 768px)');
+
+    if (isTablet) size = 396;
+
     return (
-        <div className="w-[100vw] h-[100vh] bg-[#0000004D] fixed top-0 left-0 loading-image flex justify-center items-center">
+        <div className="w-[100vw] h-[100vh] bg-[#0000004D] fixed top-0 left-0 loading-image flex justify-center items-center ">
             {isLoading ? (
                 <Box
                     sx={{
@@ -27,10 +37,10 @@ export default function LoadingScreen() {
                     }}
                 >
                     <CircularProgress
-                        size={396}
                         variant="determinate"
                         value={progress}
                         thickness={0.4}
+                        size={size}
                         sx={{
                             '& circle': {
                                 stroke: '#FFFFFF',
@@ -56,9 +66,18 @@ export default function LoadingScreen() {
                             sx={{
                                 color: '#fff',
                                 fontFamily: 'Manrope',
-                                fontSize: '80px',
-                                letterSpacing: '-3.2px',
-                                lineHeight: '80px',
+                                fontSize: {
+                                    xs: '50px',
+                                    sm: '80px',
+                                },
+                                letterSpacing: {
+                                    xs: '-2px',
+                                    sm: '-3.2px',
+                                },
+                                lineHeight: {
+                                    xs: '50px',
+                                    sm: '80px',
+                                },
                                 fontWeight: '700',
                             }}
                         >{`${Math.round(progress)}%`}</Typography>
