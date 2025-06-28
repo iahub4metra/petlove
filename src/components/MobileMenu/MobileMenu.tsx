@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { MdClose } from 'react-icons/md';
-import { selectIsOpen } from '../../redux/mobileMenu/selectors';
+import { selectIsOpen } from '../../redux/uiState/selectors';
 import NavBar from '../NavBar/NavBar';
 import type { AppDispatch } from '../../redux/store';
-import { closeMenu } from '../../redux/mobileMenu/slice';
+import { closeMenu } from '../../redux/uiState/slice';
 import AuthNav from '../AuthNav/AuthNav';
 
 export default function MobileMenu() {
@@ -29,7 +29,7 @@ export default function MobileMenu() {
             >
                 <div className=" h-full flex flex-col justify-between items-center pb-[40px] px-[20px] md:px-[49px] pt-[39px]">
                     <MdClose
-                        className="w-[32px] h-[32px] cursor-pointer self-end"
+                        className="w-[32px] h-[32px] cursor-pointer self-end transition-transform duration-500 hover:rotate-180"
                         onClick={() => dispatch(closeMenu())}
                     />
                     <NavBar isMobile />
