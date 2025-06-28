@@ -1,17 +1,34 @@
 import {
     FormControl,
+    FormHelperText,
     IconButton,
     InputAdornment,
     OutlinedInput,
     TextField,
 } from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import AuthTitle from '../AuthTitle/AuthTitle';
 import { useState } from 'react';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import FormLink from './FormLink';
+import { registrationSchema } from '../../utils/validationSchema';
+import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
+import type { AppDispatch } from '../../redux/store';
+import { useDispatch } from 'react-redux';
+import { signUp } from '../../redux/auth/operations';
+
+interface FormValues {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
 
 export default function RegistrationForm() {
     const [showPassword, setShowPassword] = useState(false);
+    const dispatch: AppDispatch = useDispatch();
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -27,17 +44,64 @@ export default function RegistrationForm() {
         event.preventDefault();
     };
 
+    const {
+        register,
+        handleSubmit,
+        reset,
+        watch,
+        formState: { errors, touchedFields },
+    } = useForm<FormValues>({
+        resolver: yupResolver(registrationSchema),
+        mode: 'onBlur',
+    });
+
+    const emailError = errors.email;
+    const emailTouched = touchedFields.email;
+
+    const getEmailBorderColor = () => {
+        if (!emailTouched) return '#26262626';
+        if (emailError) return '#EF2447';
+        return '#08AA83';
+    };
+
+    const onSubmit = (data: FormValues) => {
+        const userCredentials = {
+            name: data.name,
+            email: data.email,
+            password: data.password,
+        };
+        dispatch(signUp(userCredentials));
+        reset();
+    };
+
     return (
         <div className="bg-white rounded-[30px] py-[27px] px-[20px] md:py-[30px] md:px-[140px] xl:py-[77px] xl:px-[84px]">
             <AuthTitle />
-            <form className="flex flex-col gap-[10px] mb-3 md:mb-4">
+            <form
+                noValidate
+                onSubmit={handleSubmit(onSubmit)}
+                autoComplete="false"
+                className="flex flex-col gap-[10px] mb-3 md:mb-4"
+            >
                 <TextField
+                    {...register('name')}
                     variant="outlined"
                     placeholder="Name"
+                    error={Boolean(errors.name?.message)}
+                    helperText={errors.name?.message}
                     sx={{
+                        '& input:-webkit-autofill': {
+                            boxShadow: '0 0 0 1000px white inset',
+                            WebkitTextFillColor: '#262626CC',
+                            borderRadius: '30px',
+                            transition: 'background-color 5000s ease-in-out 0s',
+                        },
                         '& .MuiInputBase-root': {
                             borderRadius: '30px',
                             borderColor: '#26262626',
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#F6B83D',
+                            },
                         },
                         '& .MuiOutlinedInput-input': {
                             padding: '12px',
@@ -55,6 +119,9 @@ export default function RegistrationForm() {
                                 'all 250ms cubic-bezier(0.4, 0.2, 0, 0.1)',
                         },
                         '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                borderColor: '#26262626',
+                            },
                             '&.Mui-focused fieldset': {
                                 borderColor: '#F6B83D',
                             },
@@ -62,12 +129,20 @@ export default function RegistrationForm() {
                     }}
                 />
                 <TextField
+                    {...register('email')}
                     variant="outlined"
                     placeholder="Email"
+                    error={!!emailError}
+                    helperText={errors.email?.message}
                     sx={{
+                        '& input:-webkit-autofill': {
+                            boxShadow: '0 0 0 1000px white inset',
+                            WebkitTextFillColor: '#262626CC',
+                            borderRadius: '30px',
+                            transition: 'background-color 5000s ease-in-out 0s',
+                        },
                         '& .MuiInputBase-root': {
                             borderRadius: '30px',
-                            borderColor: '#26262626',
                         },
                         '& .MuiOutlinedInput-input': {
                             padding: '12px',
@@ -85,17 +160,46 @@ export default function RegistrationForm() {
                                 'all 250ms cubic-bezier(0.4, 0.2, 0, 0.1)',
                         },
                         '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                borderColor: getEmailBorderColor(),
+                            },
+                            '&:hover fieldset': {
+                                borderColor: '#F6B83D',
+                            },
                             '&.Mui-focused fieldset': {
                                 borderColor: '#F6B83D',
                             },
+                        },
+                    }}
+                    slots={{ input: OutlinedInput }}
+                    slotProps={{
+                        input: {
+                            endAdornment: touchedFields.email && (
+                                <InputAdornment position="end">
+                                    {errors.email ? (
+                                        <CloseIcon className="text-[#EF2447]" />
+                                    ) : (
+                                        <CheckIcon className="text-[#08AA83]" />
+                                    )}
+                                </InputAdornment>
+                            ),
                         },
                     }}
                 />
                 <FormControl
                     sx={{
+                        '& input:-webkit-autofill': {
+                            boxShadow: '0 0 0 1000px white inset',
+                            WebkitTextFillColor: '#262626CC',
+                            borderRadius: '30px',
+                            transition: 'background-color 5000s ease-in-out 0s',
+                        },
                         '& .MuiInputBase-root': {
                             borderRadius: '30px',
                             borderColor: '#26262626',
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#F6B83D',
+                            },
                         },
                         '& .MuiOutlinedInput-input': {
                             padding: '12px',
@@ -113,6 +217,9 @@ export default function RegistrationForm() {
                                 'all 250ms cubic-bezier(0.4, 0.2, 0, 0.1)',
                         },
                         '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                borderColor: '#26262626',
+                            },
                             '&.Mui-focused fieldset': {
                                 borderColor: '#F6B83D',
                             },
@@ -121,8 +228,10 @@ export default function RegistrationForm() {
                     variant="outlined"
                 >
                     <OutlinedInput
+                        {...register('password')}
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Password"
+                        error={Boolean(errors.password?.message)}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
@@ -135,22 +244,41 @@ export default function RegistrationForm() {
                                     onMouseDown={handleMouseDownPassword}
                                     onMouseUp={handleMouseUpPassword}
                                     edge="end"
+                                    sx={{
+                                        '&:hover': {
+                                            bgcolor: 'transparent',
+                                        },
+                                    }}
                                 >
                                     {showPassword ? (
-                                        <MdVisibilityOff />
+                                        <MdVisibilityOff className="fill-[#F6B83D]" />
                                     ) : (
-                                        <MdVisibility />
+                                        <MdVisibility className="fill-[#F6B83D]" />
                                     )}
                                 </IconButton>
                             </InputAdornment>
                         }
                     />
+                    {errors.password?.message && (
+                        <FormHelperText>
+                            {errors.password.message}
+                        </FormHelperText>
+                    )}
                 </FormControl>
                 <FormControl
                     sx={{
+                        '& input:-webkit-autofill': {
+                            boxShadow: '0 0 0 1000px white inset',
+                            WebkitTextFillColor: '#262626CC',
+                            borderRadius: '30px',
+                            transition: 'background-color 5000s ease-in-out 0s',
+                        },
                         '& .MuiInputBase-root': {
                             borderRadius: '30px',
                             borderColor: '#26262626',
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                                borderColor: '#F6B83D',
+                            },
                         },
                         '& .MuiOutlinedInput-input': {
                             padding: '12px',
@@ -168,6 +296,9 @@ export default function RegistrationForm() {
                                 'all 250ms cubic-bezier(0.4, 0.2, 0, 0.1)',
                         },
                         '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                borderColor: '#26262626',
+                            },
                             '&.Mui-focused fieldset': {
                                 borderColor: '#F6B83D',
                             },
@@ -176,8 +307,14 @@ export default function RegistrationForm() {
                     variant="outlined"
                 >
                     <OutlinedInput
+                        {...register('confirmPassword', {
+                            validate: (value) =>
+                                value === watch('password') ||
+                                'Паролі не співпадають',
+                        })}
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Confirm password"
+                        error={Boolean(errors.confirmPassword?.message)}
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
@@ -190,16 +327,26 @@ export default function RegistrationForm() {
                                     onMouseDown={handleMouseDownPassword}
                                     onMouseUp={handleMouseUpPassword}
                                     edge="end"
+                                    sx={{
+                                        '&:hover': {
+                                            bgcolor: 'transparent',
+                                        },
+                                    }}
                                 >
                                     {showPassword ? (
-                                        <MdVisibilityOff />
+                                        <MdVisibilityOff className="fill-[#F6B83D]" />
                                     ) : (
-                                        <MdVisibility />
+                                        <MdVisibility className="fill-[#F6B83D]" />
                                     )}
                                 </IconButton>
                             </InputAdornment>
                         }
                     />
+                    {errors.confirmPassword?.message && (
+                        <FormHelperText>
+                            {errors.confirmPassword.message}
+                        </FormHelperText>
+                    )}
                 </FormControl>
                 <button
                     type="submit"

@@ -15,7 +15,7 @@ export default function AuthNav({ isMobile = false }: AuthNavProps) {
                 <li>
                     <Link
                         to="/login"
-                        className="bg-[#F6B83D] block text-white uppercase py-[15px] px-[35px] rounded-[30px] leading-5 font-bold"
+                        className="bg-[#F6B83D] block tracking-[-0.48px] text-white uppercase py-[15px] cursor-pointer px-[35px] rounded-[30px] leading-5 font-bold hover:bg-[#F9B020] transition-colors"
                     >
                         Log in
                     </Link>
@@ -23,9 +23,9 @@ export default function AuthNav({ isMobile = false }: AuthNavProps) {
                 <li>
                     <Link
                         to="/register"
-                        className="bg-[#FFF4DF] block text-[#F6B83D] uppercase py-[15px] px-[20px] rounded-[30px] leading-5 font-bold"
+                        className="bg-[#FFF4DF] block text-[#F6B83D] tracking-[-0.48px] cursor-pointer uppercase py-[15px] px-[20px] rounded-[30px] leading-5 font-bold hover:bg-[#FBE7C1] transition-colors"
                     >
-                        Register
+                        Registration
                     </Link>
                 </li>
             </ul>
