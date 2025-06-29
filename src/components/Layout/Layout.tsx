@@ -3,12 +3,18 @@ import { Route, Routes } from 'react-router';
 import Header from '../Header/Header';
 
 const HomePage = lazy(() => import('../../pages/HomePage/HomePage'));
+const RestrictedRoute = lazy(() => import('../RestrictedRoute'));
 const RegistrationPage = lazy(
     () => import('../../pages/RegistrationPage/RegistrationPage'),
 );
 const LoginPage = lazy(() => import('../../pages/LoginPage/LoginPage'));
 const NotFoundPage = lazy(
     () => import('../../pages/NotFoundPage/NotFoundPage'),
+);
+const NewsPage = lazy(() => import('../../pages/NewsPage/NewsPage'));
+const NoticesPage = lazy(() => import('../../pages/NoticesPage/NoticesPage'));
+const OurFriendsPage = lazy(
+    () => import('../../pages/OurFriendsPage/OurFriendsPage'),
 );
 
 export default function Layout() {
@@ -21,12 +27,25 @@ export default function Layout() {
                         <Route path="/" element={<HomePage />} />
                         <Route
                             path="/register"
-                            element={<RegistrationPage />}
+                            element={
+                                <RestrictedRoute
+                                    component={<RegistrationPage />}
+                                    redirectTo="/"
+                                />
+                            }
                         />
-                        <Route path="/login" element={<LoginPage />} />
-                        <Route path="/news" />
-                        <Route path="/notices" />
-                        <Route path="/friends" />
+                        <Route
+                            path="/login"
+                            element={
+                                <RestrictedRoute
+                                    component={<LoginPage />}
+                                    redirectTo="/"
+                                />
+                            }
+                        />
+                        <Route path="/news" element={<NewsPage />} />
+                        <Route path="/notices" element={<NoticesPage />} />
+                        <Route path="/friends" element={<OurFriendsPage />} />
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </Suspense>
