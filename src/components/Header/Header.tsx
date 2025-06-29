@@ -15,7 +15,7 @@ export default function Header() {
     const user = useSelector(selectUser);
 
     return (
-        <header className="py-8">
+        <header className="py-7 md:py-8">
             <div className="flex items-center justify-between adaptive-container">
                 <Link
                     to="/"
