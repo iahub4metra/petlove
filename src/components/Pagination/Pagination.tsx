@@ -12,7 +12,6 @@ import { getVisiblePages } from '../../utils/getVisiblePages';
 
 const btnClass =
     ' border-[1px] border-solid w-[40px] md:w-[44px] h-[40px] md:h-[44px] flex justify-center items-center rounded-full active:scale-[0.95] disabled:active:scale-[1]';
-
 export interface PaginationProps {
     page: number;
     totalPages: number;
@@ -27,6 +26,13 @@ export default function Pagination({
     loading,
 }: PaginationProps) {
     const dispatch: AppDispatch = useDispatch();
+    const iconClassPrev = `${
+        page === 1 ? 'fill-[#26262680]' : 'fill-[#262626]'
+    } w-[20px] h-[20px] md:w-[24px] md:h-[24px]`;
+
+    const iconClassNext = `${
+        page == totalPages ? 'fill-[#26262680]' : 'fill-[#262626]'
+    } w-[20px] h-[20px] md:w-[24px] md:h-[24px]`;
 
     const isTablet = useMediaQuery('(min-width: 768px)');
 
@@ -65,7 +71,7 @@ export default function Pagination({
                 disabled={page === 1}
                 onClick={handleToFirst}
             >
-                <MdOutlineKeyboardDoubleArrowLeft className="w-[20px] h-[20px] md:w-[24px] md:h-[24px]" />
+                <MdOutlineKeyboardDoubleArrowLeft className={iconClassPrev} />
             </button>
             <button
                 className={`${btnClass} ${
@@ -76,7 +82,7 @@ export default function Pagination({
                 disabled={page === 1}
                 onClick={handlePrevPage}
             >
-                <MdOutlineKeyboardArrowLeft className="w-[20px] h-[20px] md:w-[24px] md:h-[24px]" />
+                <MdOutlineKeyboardArrowLeft className={iconClassPrev} />
             </button>
             <ul className="gap-2.5 flex mx-[11px]">
                 {visiblePages.map((p) => (
@@ -113,7 +119,7 @@ export default function Pagination({
                 disabled={page == totalPages}
                 onClick={handleNextPage}
             >
-                <MdOutlineKeyboardArrowRight className="w-[20px] h-[20px] md:w-[24px] md:h-[24px]" />
+                <MdOutlineKeyboardArrowRight className={iconClassNext} />
             </button>
             <button
                 className={`${btnClass} ml-[6px] ${
@@ -124,7 +130,7 @@ export default function Pagination({
                 disabled={page == totalPages}
                 onClick={handleToLast}
             >
-                <MdOutlineKeyboardDoubleArrowRight className="w-[20px] h-[20px] md:w-[24px] md:h-[24px]" />
+                <MdOutlineKeyboardDoubleArrowRight className={iconClassNext} />
             </button>
         </div>
     );
