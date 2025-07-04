@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { uiReducer } from './uiState/slice';
 import { authReducer } from './auth/slice';
+import { newsReducer } from './news/slice';
 
 const store = configureStore({
     reducer: {
         menu: uiReducer,
         auth: authReducer,
+        news: newsReducer,
     },
 });
 
