@@ -23,3 +23,13 @@ export type MidUser = BaseUser & {
         },
     ];
 };
+
+export type News = {
+    _id: string;
+    imgUrl: string;
+    title: string;
+    text: string;
+    date: string;
+    url: string;
+    id: string;
+};
