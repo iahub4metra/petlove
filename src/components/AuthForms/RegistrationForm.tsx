@@ -174,7 +174,7 @@ export default function RegistrationForm() {
                     slots={{ input: OutlinedInput }}
                     slotProps={{
                         input: {
-                            endAdornment: touchedFields.email && (
+                            endAdornment: emailTouched && (
                                 <InputAdornment position="end">
                                     {errors.email ? (
                                         <CloseIcon className="text-[#EF2447]" />
