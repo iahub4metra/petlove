@@ -48,7 +48,10 @@ export default function FriendsItem({ friend }: FriendsItemProps) {
                                     : undefined
                             }
                             target="_blank"
-                            className="text-[#262626] text-[14px] font-medium tracking-[-0.28px] leading-[18px]"
+                            className={`text-[#262626] text-[14px] font-medium tracking-[-0.28px] leading-[18px] ${
+                                friend.email &&
+                                'hover:text-[#F6B83D] transition-colors duration-300'
+                            } `}
                         >
                             {friend.email ? friend.email : 'Phone only'}
                         </a>
@@ -59,7 +62,10 @@ export default function FriendsItem({ friend }: FriendsItemProps) {
                             type="map"
                             href={friend.addressUrl ?? undefined}
                             target="_blank"
-                            className="overflow-ellipsis overflow-hidden w-[137px] text-[#262626] text-[14px] font-medium tracking-[-0.28px] leading-[18px] max-h-[18px] inline-block"
+                            className={`overflow-ellipsis overflow-hidden w-[137px] text-[#262626] text-[14px] font-medium tracking-[-0.28px] leading-[18px] max-h-[18px] inline-block ${
+                                friend.addressUrl &&
+                                'hover:text-[#F6B83D] transition-colors duration-300'
+                            } `}
                         >
                             {friend.address ? friend.address : 'Website only'}
                         </a>
@@ -71,7 +77,10 @@ export default function FriendsItem({ friend }: FriendsItemProps) {
                             href={
                                 friend.phone ? `tel:${friend.phone}` : undefined
                             }
-                            className="text-[#262626] text-[14px] font-medium tracking-[-0.28px] leading-[18px]"
+                            className={`text-[#262626] text-[14px] font-medium tracking-[-0.28px] leading-[18px] ${
+                                friend.phone &&
+                                'hover:text-[#F6B83D] transition-colors duration-300'
+                            } `}
                         >
                             {friend.phone ? friend.phone : 'Email only'}
                         </a>
