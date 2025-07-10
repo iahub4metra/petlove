@@ -1,6 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useContext } from 'react';
 import { Route, Routes } from 'react-router';
 import Header from '../Header/Header';
+import { PageContext } from '../Context/PageContext';
 
 const HomePage = lazy(() => import('../../pages/HomePage/HomePage'));
 const RestrictedRoute = lazy(() => import('../RestrictedRoute'));
@@ -18,9 +19,11 @@ const OurFriendsPage = lazy(
 );
 
 export default function Layout() {
+    const { isHome } = useContext(PageContext);
+
     return (
         <>
-            <Header />
+            {!isHome && <Header />}
             <main>
                 <Suspense fallback={<p>Loading...</p>}>
                     <Routes>

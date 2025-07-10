@@ -30,6 +30,20 @@ body {
     padding: 0 20px;
   }
 
+  .home-container {
+    margin: 0 auto;
+    max-width: 335px;
+    padding-top: 10px;
+    width: 100%;
+  }
+
+  .home-header {
+    padding: 18px 20px 28px 20px;
+    max-width: 335px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
   .loading-image {
     background-image: url('/images/loading-screen/mobile.jpg');
     background-repeat: no-repeat;
@@ -61,6 +75,16 @@ body {
       padding: 0 32px;
     }
 
+    .home-container {
+      max-width: 704px;
+      padding-top: 16px;
+    }
+
+    .home-header {
+      max-width: 704px;
+      padding: 16px 32px 32px 32px;
+    }
+
     .loading-image {
       background-image: url('/images/loading-screen/tablet.jpg');
     }
@@ -71,6 +95,15 @@ body {
     .adaptive-container {
       max-width: 1280px;
       padding: 0 64px;
+    }
+
+    .home-header {
+      max-width: 1216px;
+      padding: 16px 64px 32px 64px;
+    }
+
+    .home-container {
+      max-width: 1216px;
     }
 
     .loading-image {

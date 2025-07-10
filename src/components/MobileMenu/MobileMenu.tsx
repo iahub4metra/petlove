@@ -5,10 +5,16 @@ import NavBar from '../NavBar/NavBar';
 import type { AppDispatch } from '../../redux/store';
 import { closeMenu } from '../../redux/uiState/slice';
 import AuthNav from '../AuthNav/AuthNav';
+import { useLocation } from 'react-router';
+import LogOutBtn from '../LogOutBtn/LogOutBtn';
+import { selectUser } from '../../redux/auth/selectors';
 
 export default function MobileMenu() {
     const isOpen = useSelector(selectIsOpen);
     const dispatch: AppDispatch = useDispatch();
+
+    const location = useLocation().pathname === '/';
+    const user = useSelector(selectUser);
     return (
         <>
             <div
@@ -21,19 +27,23 @@ export default function MobileMenu() {
             />
 
             <div
-                className={`w-[218px] md:w-[374px] fixed top-0 right-0 h-full bg-yellow-50 z-50 transition-all duration-500 transitionFunction ${
+                className={`w-[218px] md:w-[374px] fixed top-0 right-0 h-full  z-50 transition-all duration-500 transitionFunction ${
+                    location ? 'bg-white' : 'bg-[#F6B83D]'
+                } ${
                     isOpen
                         ? 'translate-x-0 opacity-100 pointer-events-auto'
                         : 'translate-x-full opacity-0 pointer-events-none'
                 }`}
             >
-                <div className=" h-full flex flex-col justify-between items-center pb-[40px] px-[20px] md:px-[49px] pt-[39px]">
+                <div
+                    className={` h-full flex flex-col justify-between items-center pb-[40px] px-[20px] md:px-[49px] pt-[39px]`}
+                >
                     <MdClose
                         className="w-[32px] h-[32px] cursor-pointer self-end transition-transform duration-500 hover:rotate-180"
                         onClick={() => dispatch(closeMenu())}
                     />
                     <NavBar isMobile />
-                    <AuthNav isMobile />
+                    {user ? <LogOutBtn isMobile /> : <AuthNav isMobile />}
                 </div>
             </div>
         </>

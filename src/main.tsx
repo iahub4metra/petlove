@@ -7,13 +7,16 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import { ThemeProvider } from '@mui/material';
 import theme from './utils/theme';
+import PageProvider from './components/Context/PageProvider';
 
 createRoot(document.getElementById('root') as HTMLElement).render(
     <StrictMode>
         <ThemeProvider theme={theme}>
             <Provider store={store}>
                 <BrowserRouter>
-                    <App />
+                    <PageProvider>
+                        <App />
+                    </PageProvider>
                 </BrowserRouter>
             </Provider>
         </ThemeProvider>
