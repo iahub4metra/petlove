@@ -6,7 +6,7 @@ import { friendsReducer } from './friends/slice';
 
 const store = configureStore({
     reducer: {
-        menu: uiReducer,
+        ui: uiReducer,
         auth: authReducer,
         news: newsReducer,
         friends: friendsReducer,

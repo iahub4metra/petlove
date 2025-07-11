@@ -6,6 +6,7 @@ import { getCurrentUser } from '../../redux/auth/operations';
 import type { AppDispatch } from '../../redux/store';
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
 import { useLocation } from 'react-router';
+import ModalApproveAction from '../LogOut/ModalApproveAction';
 
 export default function App() {
     const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +32,7 @@ export default function App() {
             <Layout />
             <MobileMenu />
             {isLoading && <LoadingScreen />}
+            <ModalApproveAction />
         </div>
     );
 }

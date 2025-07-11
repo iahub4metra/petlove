@@ -2,14 +2,16 @@ import { createSlice } from '@reduxjs/toolkit';
 
 interface InitialValue {
     isOpen: boolean;
+    isOpenLogoutModal: boolean;
 }
 
 const initialState: InitialValue = {
     isOpen: false,
+    isOpenLogoutModal: false,
 };
 
 const uiSlice = createSlice({
-    name: 'mobileMenu',
+    name: 'uiState',
     initialState,
     reducers: {
         openMenu: (state) => {
@@ -18,8 +20,11 @@ const uiSlice = createSlice({
         closeMenu: (state) => {
             state.isOpen = false;
         },
+        manageLogoutModal: (state, action) => {
+            state.isOpenLogoutModal = action.payload;
+        },
     },
 });
 
-export const { openMenu, closeMenu } = uiSlice.actions;
+export const { openMenu, closeMenu, manageLogoutModal } = uiSlice.actions;
 export const uiReducer = uiSlice.reducer;

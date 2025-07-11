@@ -6,7 +6,7 @@ import AuthNav from '../AuthNav/AuthNav';
 import type { AppDispatch } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { openMenu } from '../../redux/uiState/slice';
-import LogOutBtn from '../LogOutBtn/LogOutBtn';
+import LogOutBtn from '../LogOut/LogOutBtn';
 import UserBar from '../UserBar/UserBar';
 import { selectUser } from '../../redux/auth/selectors';
 import { useContext } from 'react';

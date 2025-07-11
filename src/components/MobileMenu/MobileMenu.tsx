@@ -6,7 +6,7 @@ import type { AppDispatch } from '../../redux/store';
 import { closeMenu } from '../../redux/uiState/slice';
 import AuthNav from '../AuthNav/AuthNav';
 import { useLocation } from 'react-router';
-import LogOutBtn from '../LogOutBtn/LogOutBtn';
+import LogOutBtn from '../LogOut/LogOutBtn';
 import { selectUser } from '../../redux/auth/selectors';
 
 export default function MobileMenu() {
