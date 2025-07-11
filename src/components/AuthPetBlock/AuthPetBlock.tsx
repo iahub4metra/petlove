@@ -29,7 +29,7 @@ export default function AuhtPetBlock() {
                 <img
                     src={`${imagePrefix}/mobile.png`}
                     alt="cat"
-                    className="mr-[90px] ml-auto xl:mr-[20px] xl:h-[654px]"
+                    className="md:mr-[90px] md:ml-auto xl:mr-[20px] xl:h-[654px]"
                 />
             </picture>
             <div className="hidden px-4 pb-[18px] pt-4 bg-white rounded-[20px] md:flex gap-2 w-[294px] absolute bottom-[32px] left-[32px] xl:bottom-[97px] xl:left-[61px]">

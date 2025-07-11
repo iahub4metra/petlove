@@ -39,7 +39,10 @@ export default function ModalApproveAction() {
                         <div className="flex gap-2">
                             <button
                                 type="button"
-                                onClick={() => dispatch(signOut(token))}
+                                onClick={() => {
+                                    dispatch(signOut(token));
+                                    dispatch(manageLogoutModal(false));
+                                }}
                                 className="cursor-pointer hover:scale-[1.05] active:scale-[1.05] hover:bg-[#F9B020] active:bg-[#F9B020] py-[12px] md:py-[14px] md:text-[16px] md:leading-5 md:tracking-[-0.48px] text-center bg-[#F6B83D] rounded-[30px] px-[57px] text-white text-[14px] font-bold leading-[18px] tracking-[-0.42px] transition-all duration-500"
                             >
                                 Yes
