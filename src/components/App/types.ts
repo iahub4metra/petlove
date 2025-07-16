@@ -13,7 +13,7 @@ export type MidUser = BaseUser & {
             category: string;
             title: string;
             name: string;
-            birthday: string;
+            birthday: string | null;
             comment: string;
             sex: string;
             location: string;
@@ -51,4 +51,20 @@ export type Friends = {
     phone: string;
     email: string | null;
     workDays: WorkDays[] | null;
+};
+
+export type Pet = {
+    _id: string;
+    species: string;
+    category: string;
+    price: number;
+    title: string;
+    name: string;
+    birthday: string | null;
+    comment: string;
+    sex: string;
+    location: string;
+    imgURL: string;
+    user: string;
+    popularity: number;
 };

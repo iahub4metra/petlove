@@ -3,6 +3,7 @@ import { uiReducer } from './uiState/slice';
 import { authReducer } from './auth/slice';
 import { newsReducer } from './news/slice';
 import { friendsReducer } from './friends/slice';
+import { noticesReducer } from './notices/slice';
 
 const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
         auth: authReducer,
         news: newsReducer,
         friends: friendsReducer,
+        notices: noticesReducer,
     },
 });
 

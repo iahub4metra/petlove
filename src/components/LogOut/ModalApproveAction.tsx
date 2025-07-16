@@ -15,6 +15,7 @@ export default function ModalApproveAction() {
         <>
             <Modal
                 open={isOpen}
+                onClose={() => dispatch(manageLogoutModal(false))}
                 sx={{
                     '& .MuiModal-backdrop': {
                         bgcolor: '#2626264D',

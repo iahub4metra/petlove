@@ -39,7 +39,9 @@ export default function MobileMenu() {
                     className={` h-full flex flex-col justify-between items-center pb-[40px] px-[20px] md:px-[49px] pt-[39px]`}
                 >
                     <MdClose
-                        className="w-[32px] h-[32px] cursor-pointer self-end transition-transform duration-500 hover:rotate-180"
+                        className={`${
+                            location ? 'fill-[#262626]' : 'fill-white'
+                        } w-[32px] h-[32px] cursor-pointer self-end transition-transform duration-500 hover:rotate-180`}
                         onClick={() => dispatch(closeMenu())}
                     />
                     <NavBar isMobile />

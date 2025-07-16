@@ -7,6 +7,8 @@ import type { AppDispatch } from '../../redux/store';
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
 import { useLocation } from 'react-router';
 import ModalApproveAction from '../LogOut/ModalApproveAction';
+import ModalNotice from '../Notices/ModalNotice';
+import ModalAttention from '../ModalAttention/ModalAttention';
 
 export default function App() {
     const [isLoading, setIsLoading] = useState(false);
@@ -33,6 +35,8 @@ export default function App() {
             <MobileMenu />
             {isLoading && <LoadingScreen />}
             <ModalApproveAction />
+            <ModalNotice />
+            <ModalAttention />
         </div>
     );
 }
