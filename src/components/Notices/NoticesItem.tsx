@@ -96,6 +96,11 @@ export default function NoticesItem({ pet }: NoticesItemProps) {
                     <button
                         type="button"
                         className="bg-[#FFF4DF] hover:bg-[#FBE7C1] rounded-full transition-colors duration-500 cursor-pointer w-[46px] md:w-[48px] h-[46px] md:h-[48px] p-[15px]"
+                        onClick={() => {
+                            if (!localStorage.getItem('token')) {
+                                dispatch(manageModalAttention(true));
+                            }
+                        }}
                     >
                         {pet ? (
                             <CiHeart className="fill-[#F6B83D] w-[18px] h-[18px]" />
