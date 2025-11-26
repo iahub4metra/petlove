@@ -101,7 +101,7 @@ export default function ModalNotice() {
                     {pet?.comment}
                 </p>
                 <p className="text-[#2B2B2A] text-[16px] font-black leading-5 mb-5">
-                    ${pet?.price}
+                    {pet?.price ? `$${pet?.price}` : 'Free'}
                 </p>
                 <div className="flex gap-2.5 items-center">
                     <button className="flex py-[12px] px-[31px] bg-[#F6B83D] rounded-[30px] text-white text-[16px] font-medium leading-5 tracking-[-0.48px] gap-2 items-center cursor-pointer ">
