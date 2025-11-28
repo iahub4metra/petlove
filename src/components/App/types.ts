@@ -68,3 +68,11 @@ export type Pet = {
     user: string;
     popularity: number;
 };
+
+export type Location = {
+    _id: string;
+    useCounty: string;
+    stateEn: string;
+    cityEn: string;
+    countyEn: string;
+};

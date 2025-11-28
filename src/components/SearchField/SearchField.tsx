@@ -71,6 +71,7 @@ export default function SearchField<T>({
                 },
                 '& .MuiInputBase-root': {
                     borderRadius: '30px',
+                    maxHeight: '48px',
                     //width: '100%',
                     //maxWidth: !formRegister ? '335px' : '295px',
                     bgcolor: 'white',

@@ -8,6 +8,16 @@ interface InitialValue {
     totalPages: number;
     loading: boolean;
     selectedPet: ByIdResponse | null;
+    filters: {
+        keyword: string;
+        category: string;
+        sex: string;
+        species: string;
+        locationId: string;
+        byDate: boolean | null;
+        byPrice: boolean | null;
+        byPopularity: boolean | null;
+    };
 }
 
 const initialState: InitialValue = {
@@ -16,6 +26,16 @@ const initialState: InitialValue = {
     totalPages: 0,
     loading: false,
     selectedPet: null,
+    filters: {
+        keyword: '',
+        category: '',
+        sex: '',
+        species: '',
+        locationId: '',
+        byDate: null,
+        byPopularity: null,
+        byPrice: null,
+    },
 };
 
 const handlePending = (state: InitialValue) => {
@@ -32,6 +52,9 @@ const noticesSlice = createSlice({
     reducers: {
         setPage: (state, action) => {
             state.page = action.payload;
+        },
+        setFilters: (state, action) => {
+            state.filters = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -53,6 +76,6 @@ const noticesSlice = createSlice({
     },
 });
 
-export const { setPage } = noticesSlice.actions;
+export const { setPage, setFilters } = noticesSlice.actions;
 
 export const noticesReducer = noticesSlice.reducer;

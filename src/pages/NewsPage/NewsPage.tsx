@@ -7,7 +7,6 @@ import NewsList from '../../components/News/NewsList';
 import {
     selectKeyword,
     selectNewsLoading,
-    //selectNews,
     selectPage,
     selectTotalPages,
 } from '../../redux/news/selectors';
@@ -31,7 +30,11 @@ export default function NewsPage() {
             <div className="adaptive-container">
                 <div className="flex flex-wrap items-start md:items-center md:flex-nowrap md:justify-between mb-[24px] md:mb-[44px] xl:mb-[60px]">
                     <PagesTitle />
-                    <SearchField action={setKeyword} />
+                    <SearchField
+                        action={setKeyword}
+                        asForm
+                        actionClear={setKeyword('')}
+                    />
                 </div>
 
                 <NewsList />
