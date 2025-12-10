@@ -61,7 +61,7 @@ export default function ModalNotice() {
                 {pet?.popularity !== undefined && (
                     <div className="flex items-center gap-1 mb-6">
                         {Array.from({ length: 5 }).map((_, i) => {
-                            const maxPopularity = 12000; // можна відкоригувати
+                            const maxPopularity = 12000;
                             const normalized = Math.round(
                                 (pet.popularity / maxPopularity) * 5,
                             );

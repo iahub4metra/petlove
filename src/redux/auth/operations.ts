@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import type { MidUser } from '../../components/App/types';
+import type { FullUser, MidUser } from '../../components/App/types';
 
 interface SignUpPayload {
     name: string;
@@ -19,6 +19,8 @@ interface SignResponse {
 }
 
 type CurrentResponse = MidUser;
+
+type CurrentFullResponse = FullUser;
 
 axios.defaults.baseURL = 'https://petlove.b.goit.study/api';
 
@@ -90,6 +92,26 @@ export const getCurrentUser = createAsyncThunk<CurrentResponse, string>(
     async (token, thunkAPI) => {
         try {
             const data = await axios.get('users/current', {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return data.data;
+        } catch (error) {
+            let message = 'Unknown error';
+
+            if (error instanceof Error) {
+                message = error.message;
+            }
+
+            return thunkAPI.rejectWithValue(message);
+        }
+    },
+);
+
+export const getCurrentUserFull = createAsyncThunk<CurrentFullResponse, string>(
+    'auth/current/full',
+    async (token, thunkAPI) => {
+        try {
+            const data = await axios.get('users/current/full', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             return data.data;

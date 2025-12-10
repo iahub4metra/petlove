@@ -5,6 +5,7 @@ interface InitialValue {
     isOpenLogoutModal: boolean;
     isOpenModalNotice: boolean;
     isOpenModalAttention: boolean;
+    isOpenModalEditUser: boolean;
 }
 
 const initialState: InitialValue = {
@@ -12,6 +13,7 @@ const initialState: InitialValue = {
     isOpenLogoutModal: false,
     isOpenModalNotice: false,
     isOpenModalAttention: false,
+    isOpenModalEditUser: false,
 };
 
 const uiSlice = createSlice({
@@ -33,6 +35,9 @@ const uiSlice = createSlice({
         manageModalAttention: (state, action) => {
             state.isOpenModalAttention = action.payload;
         },
+        manageModalEditUser: (state, action) => {
+            state.isOpenModalEditUser = action.payload;
+        },
     },
 });
 
@@ -42,5 +47,6 @@ export const {
     manageLogoutModal,
     manageModalNotice,
     manageModalAttention,
+    manageModalEditUser,
 } = uiSlice.actions;
 export const uiReducer = uiSlice.reducer;

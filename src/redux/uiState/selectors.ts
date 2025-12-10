@@ -7,3 +7,5 @@ export const selectModalNotice = (state: RootState) =>
     state.ui.isOpenModalNotice;
 export const selectModalAttention = (state: RootState) =>
     state.ui.isOpenModalAttention;
+export const selectModalEditUser = (state: RootState) =>
+    state.ui.isOpenModalEditUser;

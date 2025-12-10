@@ -1,6 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { BaseUser, MidUser } from '../../components/App/types';
-import { getCurrentUser, signIn, signOut, signUp } from './operations';
+import type { BaseUser, FullUser, MidUser } from '../../components/App/types';
+import {
+    getCurrentUser,
+    getCurrentUserFull,
+    signIn,
+    signOut,
+    signUp,
+} from './operations';
 
 type RejectedAction = {
     type: string;
@@ -10,7 +16,7 @@ type RejectedAction = {
 };
 
 interface InitialValue {
-    user: BaseUser | MidUser | null;
+    user: BaseUser | MidUser | FullUser | null;
     loading: boolean;
     error: string | null;
 }
@@ -60,7 +66,13 @@ const authSlice = createSlice({
                 state.user = action.payload;
                 state.loading = false;
             })
-            .addCase(getCurrentUser.rejected, handleRejected);
+            .addCase(getCurrentUser.rejected, handleRejected)
+            .addCase(getCurrentUserFull.pending, handlePending)
+            .addCase(getCurrentUserFull.fulfilled, (state, action) => {
+                state.user = action.payload;
+                state.loading = false;
+            })
+            .addCase(getCurrentUserFull.rejected, handleRejected);
     },
 });
 

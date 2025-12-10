@@ -10,6 +10,7 @@ export type MidUser = BaseUser & {
         {
             _id: string;
             species: string;
+            price: string;
             category: string;
             title: string;
             name: string;
@@ -22,6 +23,13 @@ export type MidUser = BaseUser & {
             popularity: number;
         },
     ];
+};
+
+export type FullUser = MidUser & {
+    phone: string;
+    avatar: string;
+    noticesViewed: Pet[];
+    pets: UserPets[];
 };
 
 export type News = {
@@ -76,3 +84,8 @@ export type Location = {
     cityEn: string;
     countyEn: string;
 };
+
+export type UserPets = Omit<
+    Pet,
+    'price' | 'location' | 'category' | 'comment' | 'user' | 'popularity'
+>;

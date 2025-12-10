@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 
 const emailExp = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+const phoneExp = /^\+\d{5,15}$/;
 
 export const registrationSchema = yup.object({
     name: yup.string().required('Name is required'),
@@ -29,4 +30,18 @@ export const loginSchema = yup.object({
         .string()
         .min(7, 'Password must be at least 7 characters')
         .required('Password is required'),
+});
+
+export const editUserSchema = yup.object({
+    name: yup.string().defined(),
+    email: yup
+        .string()
+        .email('Enter a valid email')
+        .matches(emailExp, 'Enter a valid email')
+        .defined(),
+    //avatar: yup.string().defined(),
+    phone: yup
+        .string()
+        .matches(phoneExp, 'Enter a valid phone number')
+        .defined(),
 });

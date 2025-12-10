@@ -9,12 +9,14 @@ import { useLocation } from 'react-router';
 import ModalApproveAction from '../LogOut/ModalApproveAction';
 import ModalNotice from '../Notices/ModalNotice';
 import ModalAttention from '../ModalAttention/ModalAttention';
+import ModalEditUser from '../ModalEditUser/ModalEditUser';
 
 export default function App() {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch: AppDispatch = useDispatch();
     const location = useLocation();
     useEffect(() => {
+        if (location.pathname === '/profile') return;
         const token = localStorage.getItem('token');
         if (token) {
             dispatch(getCurrentUser(token));
@@ -37,6 +39,7 @@ export default function App() {
             <ModalApproveAction />
             <ModalNotice />
             <ModalAttention />
+            <ModalEditUser />
         </div>
     );
 }

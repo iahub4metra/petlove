@@ -5,6 +5,7 @@ import { PageContext } from '../Context/PageContext';
 
 const HomePage = lazy(() => import('../../pages/HomePage/HomePage'));
 const RestrictedRoute = lazy(() => import('../RestrictedRoute'));
+const PrivateRoute = lazy(() => import('../PrivateRoute'));
 const RegistrationPage = lazy(
     () => import('../../pages/RegistrationPage/RegistrationPage'),
 );
@@ -17,6 +18,7 @@ const NoticesPage = lazy(() => import('../../pages/NoticesPage/NoticesPage'));
 const OurFriendsPage = lazy(
     () => import('../../pages/OurFriendsPage/OurFriendsPage'),
 );
+const ProfilePage = lazy(() => import('../../pages/ProfilePage/ProfilePage'));
 
 export default function Layout() {
     const { isHome } = useContext(PageContext);
@@ -42,6 +44,15 @@ export default function Layout() {
                             element={
                                 <RestrictedRoute
                                     component={<LoginPage />}
+                                    redirectTo="/"
+                                />
+                            }
+                        />
+                        <Route
+                            path="/profile"
+                            element={
+                                <PrivateRoute
+                                    component={<ProfilePage />}
                                     redirectTo="/"
                                 />
                             }
