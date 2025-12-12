@@ -2,6 +2,7 @@ import * as yup from 'yup';
 
 const emailExp = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
 const phoneExp = /^\+\d{5,15}$/;
+const avatarExp = /^https?:\/\/.*\.(?:png|jpg|jpeg|gif|bmp|webp)$/;
 
 export const registrationSchema = yup.object({
     name: yup.string().required('Name is required'),
@@ -33,15 +34,15 @@ export const loginSchema = yup.object({
 });
 
 export const editUserSchema = yup.object({
-    name: yup.string().defined(),
+    name: yup.string().required(),
     email: yup
         .string()
         .email('Enter a valid email')
         .matches(emailExp, 'Enter a valid email')
-        .defined(),
-    //avatar: yup.string().defined(),
+        .required(),
+    avatar: yup.string().matches(avatarExp, 'Enter a valid URL').required(),
     phone: yup
         .string()
         .matches(phoneExp, 'Enter a valid phone number')
-        .defined(),
+        .required(),
 });

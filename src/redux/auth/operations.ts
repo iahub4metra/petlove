@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import type { FullUser, MidUser } from '../../components/App/types';
+import type { FullUser } from '../../components/App/types';
+import type { FormValues as UserEditCredentials } from '../../components/ModalEditUser/ModalEditUser';
 
 interface SignUpPayload {
     name: string;
@@ -17,8 +18,6 @@ interface SignResponse {
     email: string;
     token: string;
 }
-
-type CurrentResponse = MidUser;
 
 type CurrentFullResponse = FullUser;
 
@@ -87,25 +86,25 @@ export const signOut = createAsyncThunk<void, string | null>(
     },
 );
 
-export const getCurrentUser = createAsyncThunk<CurrentResponse, string>(
-    'auth/current',
-    async (token, thunkAPI) => {
-        try {
-            const data = await axios.get('users/current', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return data.data;
-        } catch (error) {
-            let message = 'Unknown error';
+// export const getCurrentUser = createAsyncThunk<CurrentResponse, string>(
+//     'auth/current',
+//     async (token, thunkAPI) => {
+//         try {
+//             const data = await axios.get('users/current', {
+//                 headers: { Authorization: `Bearer ${token}` },
+//             });
+//             return data.data;
+//         } catch (error) {
+//             let message = 'Unknown error';
 
-            if (error instanceof Error) {
-                message = error.message;
-            }
+//             if (error instanceof Error) {
+//                 message = error.message;
+//             }
 
-            return thunkAPI.rejectWithValue(message);
-        }
-    },
-);
+//             return thunkAPI.rejectWithValue(message);
+//         }
+//     },
+// );
 
 export const getCurrentUserFull = createAsyncThunk<CurrentFullResponse, string>(
     'auth/current/full',
@@ -126,3 +125,24 @@ export const getCurrentUserFull = createAsyncThunk<CurrentFullResponse, string>(
         }
     },
 );
+
+export const editUser = createAsyncThunk<
+    CurrentFullResponse,
+    UserEditCredentials
+>('auth/current/edit', async (userCredentials, thunkAPI) => {
+    try {
+        const token = localStorage.getItem('token');
+        const data = await axios.patch('users/current/edit', userCredentials, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return data.data;
+    } catch (error) {
+        let message = 'Unknown error';
+
+        if (error instanceof Error) {
+            message = error.message;
+        }
+
+        return thunkAPI.rejectWithValue(message);
+    }
+});

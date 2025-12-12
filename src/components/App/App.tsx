@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Layout from '../Layout/Layout';
 import MobileMenu from '../MobileMenu/MobileMenu';
 import { useDispatch } from 'react-redux';
-import { getCurrentUser } from '../../redux/auth/operations';
+import { getCurrentUserFull } from '../../redux/auth/operations';
 import type { AppDispatch } from '../../redux/store';
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
 import { useLocation } from 'react-router';
@@ -16,12 +16,11 @@ export default function App() {
     const dispatch: AppDispatch = useDispatch();
     const location = useLocation();
     useEffect(() => {
-        if (location.pathname === '/profile') return;
         const token = localStorage.getItem('token');
         if (token) {
-            dispatch(getCurrentUser(token));
+            dispatch(getCurrentUserFull(token));
         }
-    });
+    }, [dispatch]);
 
     useEffect(() => {
         setIsLoading(true);

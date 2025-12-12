@@ -4,7 +4,7 @@ export type BaseUser = {
     token: string;
 };
 
-export type MidUser = BaseUser & {
+export type FullUser = BaseUser & {
     _id: string;
     noticesFavorites: [
         {
@@ -23,9 +23,6 @@ export type MidUser = BaseUser & {
             popularity: number;
         },
     ];
-};
-
-export type FullUser = MidUser & {
     phone: string;
     avatar: string;
     noticesViewed: Pet[];

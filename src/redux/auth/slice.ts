@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { BaseUser, FullUser, MidUser } from '../../components/App/types';
 import {
-    getCurrentUser,
+    editUser,
     getCurrentUserFull,
     signIn,
     signOut,
@@ -61,18 +61,18 @@ const authSlice = createSlice({
                 state.loading = false;
             })
             .addCase(signOut.rejected, handleRejected)
-            .addCase(getCurrentUser.pending, handlePending)
-            .addCase(getCurrentUser.fulfilled, (state, action) => {
-                state.user = action.payload;
-                state.loading = false;
-            })
-            .addCase(getCurrentUser.rejected, handleRejected)
             .addCase(getCurrentUserFull.pending, handlePending)
             .addCase(getCurrentUserFull.fulfilled, (state, action) => {
                 state.user = action.payload;
                 state.loading = false;
             })
-            .addCase(getCurrentUserFull.rejected, handleRejected);
+            .addCase(getCurrentUserFull.rejected, handleRejected)
+            .addCase(editUser.pending, handlePending)
+            .addCase(editUser.fulfilled, (state, action) => {
+                state.user = action.payload;
+                state.loading = false;
+            })
+            .addCase(editUser.rejected, handleRejected);
     },
 });
 
