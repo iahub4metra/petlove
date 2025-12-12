@@ -228,6 +228,7 @@ export default function ModalEditUser() {
                                 Upload photo
                                 <VisuallyHiddenInput
                                     type="file"
+                                    accept=".jpg, .jpeg, .png, .gif, .webp, .bmp"
                                     onChange={onChange}
                                 />
                             </Button>
