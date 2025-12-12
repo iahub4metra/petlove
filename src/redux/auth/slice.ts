@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { BaseUser, FullUser, MidUser } from '../../components/App/types';
+import type { BaseUser, FullUser } from '../../components/App/types';
 import {
     editUser,
     getCurrentUserFull,
@@ -16,7 +16,7 @@ type RejectedAction = {
 };
 
 interface InitialValue {
-    user: BaseUser | MidUser | FullUser | null;
+    user: BaseUser | FullUser | null;
     loading: boolean;
     error: string | null;
 }
