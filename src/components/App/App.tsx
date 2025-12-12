@@ -15,12 +15,12 @@ export default function App() {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch: AppDispatch = useDispatch();
     const location = useLocation();
+    const token = localStorage.getItem('token');
     useEffect(() => {
-        const token = localStorage.getItem('token');
         if (token) {
             dispatch(getCurrentUserFull(token));
         }
-    }, [dispatch]);
+    }, [dispatch, token]);
 
     useEffect(() => {
         setIsLoading(true);
