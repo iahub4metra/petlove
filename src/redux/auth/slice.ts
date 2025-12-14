@@ -7,6 +7,10 @@ import {
     signOut,
     signUp,
 } from './operations';
+import {
+    addNoticeToFavourite,
+    removeNoticeFromFavourite,
+} from '../notices/operations';
 
 type RejectedAction = {
     type: string;
@@ -72,7 +76,26 @@ const authSlice = createSlice({
                 state.user = action.payload;
                 state.loading = false;
             })
-            .addCase(editUser.rejected, handleRejected);
+            .addCase(editUser.rejected, handleRejected)
+            .addCase(addNoticeToFavourite.pending, handlePending)
+            .addCase(addNoticeToFavourite.fulfilled, (state, action) => {
+                if (state.user && 'noticesFavorites' in state.user) {
+                    state.user.noticesFavorites.push(action.payload);
+                }
+                state.loading = false;
+            })
+            .addCase(addNoticeToFavourite.rejected, handleRejected)
+            .addCase(removeNoticeFromFavourite.pending, handlePending)
+            .addCase(removeNoticeFromFavourite.fulfilled, (state, action) => {
+                if (state.user && 'noticesFavorites' in state.user) {
+                    state.user.noticesFavorites =
+                        state.user.noticesFavorites.filter(
+                            (notice) => notice._id !== action.payload._id,
+                        );
+                }
+                state.loading = false;
+            })
+            .addCase(removeNoticeFromFavourite.rejected, handleRejected);
     },
 });
 

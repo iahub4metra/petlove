@@ -3,12 +3,17 @@ import { CiHeart } from 'react-icons/ci';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import type { Pet } from '../App/types';
 import type { AppDispatch } from '../../redux/store';
-import { useDispatch } from 'react-redux';
-import { getNoticeById } from '../../redux/notices/operations';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    addNoticeToFavourite,
+    getNoticeById,
+    removeNoticeFromFavourite,
+} from '../../redux/notices/operations';
 import {
     manageModalAttention,
     manageModalNotice,
 } from '../../redux/uiState/slice';
+import { selectUser } from '../../redux/auth/selectors';
 
 export interface NoticesItemProps {
     pet: Pet;
@@ -16,6 +21,10 @@ export interface NoticesItemProps {
 
 export default function NoticesItem({ pet }: NoticesItemProps) {
     const dispatch: AppDispatch = useDispatch();
+    const user = useSelector(selectUser);
+    const userID = user && '_id' in user ? user._id : undefined;
+    const noticesFavorites =
+        user && 'noticesFavorites' in user ? user.noticesFavorites : undefined;
 
     const handleLearnMore = async () => {
         if (localStorage.getItem('token')) {
@@ -102,10 +111,27 @@ export default function NoticesItem({ pet }: NoticesItemProps) {
                             }
                         }}
                     >
-                        {pet ? (
-                            <CiHeart className="fill-[#F6B83D] w-[18px] h-[18px]" />
+                        {!noticesFavorites?.find(
+                            (noticeFav) => noticeFav._id === pet._id,
+                        ) ? (
+                            <CiHeart
+                                onClick={() =>
+                                    dispatch(
+                                        addNoticeToFavourite({
+                                            notice: pet,
+                                            userID: userID,
+                                        }),
+                                    )
+                                }
+                                className="fill-[#F6B83D] w-[18px] h-[18px]"
+                            />
                         ) : (
-                            <FaRegTrashAlt className="fill-[#F6B83D] w-[18px] h-[18px]" />
+                            <FaRegTrashAlt
+                                onClick={() =>
+                                    dispatch(removeNoticeFromFavourite(pet))
+                                }
+                                className="fill-[#F6B83D] w-[18px] h-[18px]"
+                            />
                         )}
                     </button>
                 </div>

@@ -33,6 +33,24 @@ export type ByIdResponse = Pet & {
     };
 };
 
+export const mapNoticeToNotice = (notice: ByIdResponse): Pet => {
+    return {
+        _id: notice._id,
+        species: notice.species,
+        category: notice.category,
+        price: notice.price,
+        title: notice.title,
+        name: notice.name,
+        birthday: notice.birthday,
+        comment: notice.comment,
+        sex: notice.sex,
+        location: notice.location._id,
+        imgURL: notice.imgURL,
+        user: notice.user._id,
+        popularity: notice.popularity,
+    };
+};
+
 export const getAllNotices = createAsyncThunk<AllResponse, AllPayload>(
     'notices/all',
     async ({ page, filters }, thunkAPI) => {
@@ -136,6 +154,60 @@ export const getLocation = createAsyncThunk<Location[], string>(
                 params: { keyword: keyword },
             });
             return response.data;
+        } catch (error) {
+            let message = 'Unknown error';
+
+            if (error instanceof Error) {
+                message = error.message;
+            }
+
+            return thunkAPI.rejectWithValue(message);
+        }
+    },
+);
+
+export const addNoticeToFavourite = createAsyncThunk<
+    Pet,
+    { notice: Pet; userID: string | undefined }
+>('notices/favorites/add', async (credentials, thunkAPI) => {
+    try {
+        const token = localStorage.getItem('token');
+        await axios.post(
+            `notices/favorites/add/${credentials.notice._id}`,
+            credentials.userID,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            },
+        );
+        const response = await axios.get(`notices/${credentials.notice._id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        return mapNoticeToNotice(response.data);
+    } catch (error) {
+        let message = 'Unknown error';
+
+        if (error instanceof Error) {
+            message = error.message;
+        }
+
+        return thunkAPI.rejectWithValue(message);
+    }
+});
+
+export const removeNoticeFromFavourite = createAsyncThunk<Pet, Pet>(
+    'notices/favorites/remove',
+    async (notice, thunkAPI) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.delete(`notices/favorites/remove/${notice._id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const response = await axios.get(`notices/${notice._id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            return mapNoticeToNotice(response.data);
         } catch (error) {
             let message = 'Unknown error';
 
