@@ -6,23 +6,21 @@ export type BaseUser = {
 
 export type FullUser = BaseUser & {
     _id: string;
-    noticesFavorites: [
-        {
-            _id: string;
-            species: string;
-            price: string;
-            category: string;
-            title: string;
-            name: string;
-            birthday: string | null;
-            comment: string;
-            sex: string;
-            location: string;
-            imgURL: string;
-            user: string;
-            popularity: number;
-        },
-    ];
+    noticesFavorites: {
+        _id: string;
+        species: string;
+        price: number;
+        category: string;
+        title: string;
+        name: string;
+        birthday: string | null;
+        comment: string;
+        sex: string;
+        location: string;
+        imgURL: string;
+        user: string;
+        popularity: number;
+    }[];
     phone: string;
     avatar: string;
     noticesViewed: Pet[];
