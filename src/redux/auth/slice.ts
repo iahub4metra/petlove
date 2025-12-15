@@ -23,12 +23,16 @@ interface InitialValue {
     user: BaseUser | FullUser | null;
     loading: boolean;
     error: string | null;
+    favCountBeforeAdding: number;
+    showPopUpFirstFav: boolean;
 }
 
 const initialState: InitialValue = {
     user: null,
     loading: false,
     error: null,
+    favCountBeforeAdding: 0,
+    showPopUpFirstFav: false,
 };
 
 const handlePending = (state: InitialValue) => {
@@ -44,7 +48,11 @@ const handleRejected = (state: InitialValue, action: RejectedAction) => {
 const authSlice = createSlice({
     name: 'auth',
     initialState,
-    reducers: {},
+    reducers: {
+        hidePopup: (state, action) => {
+            state.showPopUpFirstFav = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(signUp.pending, handlePending)
@@ -77,10 +85,25 @@ const authSlice = createSlice({
                 state.loading = false;
             })
             .addCase(editUser.rejected, handleRejected)
-            .addCase(addNoticeToFavourite.pending, handlePending)
+            .addCase(addNoticeToFavourite.pending, (state) => {
+                if (state.user && 'noticesFavorites' in state.user) {
+                    state.favCountBeforeAdding =
+                        state.user.noticesFavorites.length;
+                }
+                state.error = null;
+                state.loading = false;
+            })
             .addCase(addNoticeToFavourite.fulfilled, (state, action) => {
                 if (state.user && 'noticesFavorites' in state.user) {
                     state.user.noticesFavorites.push(action.payload);
+                }
+                if (
+                    state.user &&
+                    'noticesFavorites' in state.user &&
+                    state.favCountBeforeAdding === 0 &&
+                    state.user.noticesFavorites.length === 1
+                ) {
+                    state.showPopUpFirstFav = true;
                 }
                 state.loading = false;
             })
@@ -98,5 +121,7 @@ const authSlice = createSlice({
             .addCase(removeNoticeFromFavourite.rejected, handleRejected);
     },
 });
+
+export const { hidePopup } = authSlice.actions;
 
 export const authReducer = authSlice.reducer;

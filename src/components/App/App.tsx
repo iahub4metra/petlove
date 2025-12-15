@@ -10,6 +10,7 @@ import ModalApproveAction from '../LogOut/ModalApproveAction';
 import ModalNotice from '../Notices/ModalNotice';
 import ModalAttention from '../ModalAttention/ModalAttention';
 import ModalEditUser from '../ModalEditUser/ModalEditUser';
+import PopUpFavorites from '../PopUpFavorites/PopUpFavorites';
 
 export default function App() {
     const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +40,7 @@ export default function App() {
             <ModalNotice />
             <ModalAttention />
             <ModalEditUser />
+            <PopUpFavorites />
         </div>
     );
 }
