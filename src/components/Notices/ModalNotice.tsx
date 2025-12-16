@@ -7,11 +7,21 @@ import { manageModalNotice } from '../../redux/uiState/slice';
 import { IoClose } from 'react-icons/io5';
 import { FaStar } from 'react-icons/fa6';
 import { CiHeart } from 'react-icons/ci';
+import { selectUser } from '../../redux/auth/selectors';
+import { FaRegTrashAlt } from 'react-icons/fa';
+import {
+    addNoticeToFavourite,
+    removeNoticeFromFavourite,
+} from '../../redux/notices/operations';
 
 export default function ModalNotice() {
     const isOpen = useSelector(selectModalNotice);
     const pet = useSelector(selectSelectedPet);
     const dispatch: AppDispatch = useDispatch();
+    const user = useSelector(selectUser);
+    const userID = user && '_id' in user ? user._id : undefined;
+    const noticesFavorites =
+        user && 'noticesFavorites' in user ? user.noticesFavorites : undefined;
     const petInfo = pet && [
         {
             label: 'Name',
@@ -104,10 +114,35 @@ export default function ModalNotice() {
                     {pet?.price ? `$${pet?.price}` : 'Free'}
                 </p>
                 <div className="flex gap-2.5 items-center">
-                    <button className="flex py-[12px] px-[31px] bg-[#F6B83D] rounded-[30px] text-white text-[16px] font-medium leading-5 tracking-[-0.48px] gap-2 items-center cursor-pointer ">
-                        Add to
-                        <CiHeart className="fill-white w-[18px] h-[18px]" />
-                    </button>
+                    {!noticesFavorites?.find(
+                        (notice) => notice._id === pet?._id,
+                    ) ? (
+                        <button
+                            onClick={() =>
+                                dispatch(
+                                    addNoticeToFavourite({
+                                        notice: pet!,
+                                        userID: userID,
+                                    }),
+                                )
+                            }
+                            className="flex py-[12px] px-[31px] bg-[#F6B83D] rounded-[30px] text-white text-[16px] font-medium leading-5 tracking-[-0.48px] gap-2 items-center cursor-pointer "
+                        >
+                            Add to
+                            <CiHeart className="fill-white w-[18px] h-[18px]" />
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() =>
+                                dispatch(removeNoticeFromFavourite(pet!))
+                            }
+                            className="flex py-[12px] px-[31px] bg-[#F6B83D] rounded-[30px] text-white text-[16px] font-medium leading-5 tracking-[-0.48px] gap-2 items-center cursor-pointer "
+                        >
+                            Remove
+                            <FaRegTrashAlt className="fill-white w-[18px] h-[18px]" />
+                        </button>
+                    )}
+
                     <a
                         href={`mailto:${pet?.user.email}`}
                         className="rounded-[30px] bg-[#FFF4DF] text-[#F6B83D] text-[16px] font-medium leading-5 tracking-[-0.48px] py-[12px] px-[37px]"
