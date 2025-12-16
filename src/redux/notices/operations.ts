@@ -195,7 +195,7 @@ export const addNoticeToFavourite = createAsyncThunk<
     }
 });
 
-export const removeNoticeFromFavourite = createAsyncThunk<Pet, Pet>(
+export const removeNoticeFromFavourite = createAsyncThunk<string, Pet>(
     'notices/favorites/remove',
     async (notice, thunkAPI) => {
         try {
@@ -203,11 +203,8 @@ export const removeNoticeFromFavourite = createAsyncThunk<Pet, Pet>(
             await axios.delete(`notices/favorites/remove/${notice._id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            const response = await axios.get(`notices/${notice._id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
 
-            return mapNoticeToNotice(response.data);
+            return notice._id;
         } catch (error) {
             let message = 'Unknown error';
 

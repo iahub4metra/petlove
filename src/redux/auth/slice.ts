@@ -113,7 +113,7 @@ const authSlice = createSlice({
                 if (state.user && 'noticesFavorites' in state.user) {
                     state.user.noticesFavorites =
                         state.user.noticesFavorites.filter(
-                            (notice) => notice._id !== action.payload._id,
+                            (notice) => notice._id !== action.payload,
                         );
                 }
                 state.loading = false;
