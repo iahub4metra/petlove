@@ -33,24 +33,6 @@ export type ByIdResponse = Pet & {
     };
 };
 
-export const mapNoticeToNotice = (notice: ByIdResponse): Pet => {
-    return {
-        _id: notice._id,
-        species: notice.species,
-        category: notice.category,
-        price: notice.price,
-        title: notice.title,
-        name: notice.name,
-        birthday: notice.birthday,
-        comment: notice.comment,
-        sex: notice.sex,
-        location: notice.location._id,
-        imgURL: notice.imgURL,
-        user: notice.user._id,
-        popularity: notice.popularity,
-    };
-};
-
 export const getAllNotices = createAsyncThunk<AllResponse, AllPayload>(
     'notices/all',
     async ({ page, filters }, thunkAPI) => {
@@ -179,11 +161,8 @@ export const addNoticeToFavourite = createAsyncThunk<
                 headers: { Authorization: `Bearer ${token}` },
             },
         );
-        const response = await axios.get(`notices/${credentials.notice._id}`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
 
-        return mapNoticeToNotice(response.data);
+        return credentials.notice;
     } catch (error) {
         let message = 'Unknown error';
 
