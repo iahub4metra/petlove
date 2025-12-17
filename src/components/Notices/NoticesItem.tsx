@@ -17,9 +17,10 @@ import { selectUser } from '../../redux/auth/selectors';
 
 export interface NoticesItemProps {
     pet: Pet;
+    viewed?: boolean;
 }
 
-export default function NoticesItem({ pet }: NoticesItemProps) {
+export default function NoticesItem({ pet, viewed }: NoticesItemProps) {
     const dispatch: AppDispatch = useDispatch();
     const user = useSelector(selectUser);
     const userID = user && '_id' in user ? user._id : undefined;
@@ -94,46 +95,52 @@ export default function NoticesItem({ pet }: NoticesItemProps) {
                 <p className="mb-3 text-[#2B2B2A] text-16px] font-bold leading-5 text-left md:text-[18px] md:leading-6">
                     {pet.price ? `$${pet.price}` : 'Free'}
                 </p>
-                <div className="flex gap-2.5 items-center">
+                <div
+                    className={`${
+                        viewed ? 'flex' : 'flex gap-2.5 items-center'
+                    }`}
+                >
                     <button
                         type="button"
                         onClick={handleLearnMore}
-                        className="bg-[#F6B83D] hover:scale-[1.01] hover:bg-[#F9B020] active:scale-[1.01] transition-all duration-500 text-white text-[14px] font-medium leading-[18px] tracking-[-0.42px] py-[14px] px-[80px] cursor-pointer rounded-[30px]"
+                        className="bg-[#F6B83D] grow hover:scale-[1.01] hover:bg-[#F9B020] active:scale-[1.01] transition-all duration-500 text-white text-[14px] font-medium leading-[18px] tracking-[-0.42px] py-[14px] px-[80px] cursor-pointer rounded-[30px]"
                     >
                         Learn more
                     </button>
-                    <button
-                        type="button"
-                        className="bg-[#FFF4DF] hover:bg-[#FBE7C1] rounded-full transition-colors duration-500 cursor-pointer w-[46px] md:w-[48px] h-[46px] md:h-[48px] p-[15px]"
-                        onClick={() => {
-                            if (!localStorage.getItem('token')) {
-                                dispatch(manageModalAttention(true));
-                            }
-                        }}
-                    >
-                        {!noticesFavorites?.find(
-                            (noticeFav) => noticeFav._id === pet._id,
-                        ) ? (
-                            <CiHeart
-                                onClick={() =>
-                                    dispatch(
-                                        addNoticeToFavourite({
-                                            notice: pet,
-                                            userID: userID,
-                                        }),
-                                    )
+                    {!viewed && (
+                        <button
+                            type="button"
+                            className="bg-[#FFF4DF] hover:bg-[#FBE7C1] rounded-full transition-colors duration-500 cursor-pointer w-[46px] md:w-[48px] h-[46px] md:h-[48px] p-[15px]"
+                            onClick={() => {
+                                if (!localStorage.getItem('token')) {
+                                    dispatch(manageModalAttention(true));
                                 }
-                                className="fill-[#F6B83D] w-[18px] h-[18px]"
-                            />
-                        ) : (
-                            <FaRegTrashAlt
-                                onClick={() =>
-                                    dispatch(removeNoticeFromFavourite(pet))
-                                }
-                                className="fill-[#F6B83D] w-[18px] h-[18px]"
-                            />
-                        )}
-                    </button>
+                            }}
+                        >
+                            {!noticesFavorites?.find(
+                                (noticeFav) => noticeFav._id === pet._id,
+                            ) ? (
+                                <CiHeart
+                                    onClick={() =>
+                                        dispatch(
+                                            addNoticeToFavourite({
+                                                notice: pet,
+                                                userID: userID,
+                                            }),
+                                        )
+                                    }
+                                    className="fill-[#F6B83D] w-[18px] h-[18px]"
+                                />
+                            ) : (
+                                <FaRegTrashAlt
+                                    onClick={() =>
+                                        dispatch(removeNoticeFromFavourite(pet))
+                                    }
+                                    className="fill-[#F6B83D] w-[18px] h-[18px]"
+                                />
+                            )}
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

@@ -7,6 +7,7 @@ import { getAllNotices } from '../../redux/notices/operations';
 import {
     selectFilters,
     selectLoading,
+    selectNotices,
     selectPage,
 } from '../../redux/notices/selectors';
 import { selectTotlaPages } from '../../redux/notices/selectors';
@@ -20,6 +21,7 @@ export default function NoticesPage() {
     const totalPages = useSelector(selectTotlaPages);
     const loading = useSelector(selectLoading);
     const filters = useSelector(selectFilters);
+    const notices = useSelector(selectNotices);
 
     useEffect(() => {
         dispatch(getAllNotices({ page, filters }));
@@ -30,7 +32,7 @@ export default function NoticesPage() {
             <div className="adaptive-container">
                 <PagesTitle />
                 <NoticesFilters />
-                <NoticesList />
+                <NoticesList notices={notices} />
                 <Pagination
                     page={page}
                     totalPages={totalPages}
