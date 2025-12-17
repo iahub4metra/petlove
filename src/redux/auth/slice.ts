@@ -9,6 +9,7 @@ import {
 } from './operations';
 import {
     addNoticeToFavourite,
+    getNoticeById,
     removeNoticeFromFavourite,
 } from '../notices/operations';
 
@@ -118,7 +119,12 @@ const authSlice = createSlice({
                 }
                 state.loading = false;
             })
-            .addCase(removeNoticeFromFavourite.rejected, handleRejected);
+            .addCase(removeNoticeFromFavourite.rejected, handleRejected)
+            .addCase(getNoticeById.fulfilled, (state, action) => {
+                if (state.user && 'noticesViewed' in state.user) {
+                    state.user.noticesViewed.push(action.payload.forList);
+                }
+            });
     },
 });
 

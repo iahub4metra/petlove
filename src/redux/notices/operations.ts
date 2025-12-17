@@ -33,6 +33,24 @@ export type ByIdResponse = Pet & {
     };
 };
 
+export const mapNoticeToNotice = (notice: ByIdResponse): Pet => {
+    return {
+        _id: notice._id,
+        species: notice.species,
+        category: notice.category,
+        price: notice.price,
+        title: notice.title,
+        name: notice.name,
+        birthday: notice.birthday,
+        comment: notice.comment,
+        sex: notice.sex,
+        location: notice.location._id,
+        imgURL: notice.imgURL,
+        user: notice.user._id,
+        popularity: notice.popularity,
+    };
+};
+
 export const getAllNotices = createAsyncThunk<AllResponse, AllPayload>(
     'notices/all',
     async ({ page, filters }, thunkAPI) => {
@@ -53,26 +71,29 @@ export const getAllNotices = createAsyncThunk<AllResponse, AllPayload>(
     },
 );
 
-export const getNoticeById = createAsyncThunk<ByIdResponse, string>(
-    'notices/byId',
-    async (id, thunkAPI) => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`notices/${id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return response.data;
-        } catch (error) {
-            let message = 'Unknown error';
+export const getNoticeById = createAsyncThunk<
+    { forModal: ByIdResponse; forList: Pet },
+    string
+>('notices/byId', async (id, thunkAPI) => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`notices/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return {
+            forModal: response.data,
+            forList: mapNoticeToNotice(response.data),
+        };
+    } catch (error) {
+        let message = 'Unknown error';
 
-            if (error instanceof Error) {
-                message = error.message;
-            }
-
-            return thunkAPI.rejectWithValue(message);
+        if (error instanceof Error) {
+            message = error.message;
         }
-    },
-);
+
+        return thunkAPI.rejectWithValue(message);
+    }
+});
 
 export const getCategories = createAsyncThunk<string[]>(
     'notices/categories',

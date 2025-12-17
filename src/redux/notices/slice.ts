@@ -69,7 +69,7 @@ const noticesSlice = createSlice({
             .addCase(getAllNotices.rejected, handleRejected)
             .addCase(getNoticeById.pending, handlePending)
             .addCase(getNoticeById.fulfilled, (state, action) => {
-                state.selectedPet = action.payload;
+                state.selectedPet = action.payload.forModal;
                 state.loading = false;
             })
             .addCase(getNoticeById.rejected, handleRejected);
