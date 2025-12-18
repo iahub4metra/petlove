@@ -46,27 +46,30 @@ export default function UserBlock() {
             <h4 className="font-bold text-[16px] text-[#262626] leading-5 text-left">
                 My information
             </h4>
-            <div className="flex flex-col gap-[10px] mb-[40px]">
+            <div className="flex flex-col gap-[10px] mb-[40px] md:flex-row md:flex-wrap md:gap-3.5 xl:flex-col xl:flex-nowrap">
                 <input
-                    className="p-[12px] leading-[18px] text-[14px] font-medium tracking-[-0.36px] rounded-[30px] outline-0 border border-[#26262615] not-placeholder-shown:border-[#F6B83D]"
+                    className="p-[12px] md:p-4 md:w-[305px] xl:w-full leading-[18px] text-[14px] font-medium tracking-[-0.36px] rounded-[30px] outline-0 border border-[#26262615] not-placeholder-shown:border-[#F6B83D]"
                     type="text"
                     value={user?.name}
                     disabled
                     placeholder="Name"
+                    name="name"
                 />
                 <input
-                    className="p-[12px] leading-[18px] text-[14px] font-medium tracking-[-0.36px] rounded-[30px] outline-0 border border-[#26262615] not-placeholder-shown:border-[#F6B83D]"
+                    className="p-[12px] md:p-4 md:w-[305px] xl:w-full leading-[18px] text-[14px] font-medium tracking-[-0.36px] rounded-[30px] outline-0 border border-[#26262615] not-placeholder-shown:border-[#F6B83D]"
                     type="text"
                     value={user?.email}
                     disabled
                     placeholder="Email"
+                    name="email"
                 />
                 <input
-                    className="p-[12px] leading-[18px] text-[14px] font-medium tracking-[-0.36px] rounded-[30px] outline-0 border border-[#26262615] not-placeholder-shown:border-[#F6B83D]"
+                    className="p-[12px] md:p-4 md:w-[305px] xl:w-full leading-[18px] text-[14px] font-medium tracking-[-0.36px] rounded-[30px] outline-0 border border-[#26262615] not-placeholder-shown:border-[#F6B83D]"
                     type="text"
                     value={user && 'phone' in user ? user.phone : ''}
                     disabled
                     placeholder="Phone Number"
+                    name="phone"
                 />
             </div>
         </div>

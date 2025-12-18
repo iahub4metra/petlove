@@ -8,7 +8,7 @@ export default function EditUserBtn() {
     return (
         <button
             onClick={() => dispatch(manageModalEditUser(true))}
-            className="bg-[#FFF4DF] rounded-full absolute top-[18px] right-[20px] w-[38px] h-[38px] flex justify-center items-center hover:bg-[#FBE7C1] transition-colors cursor-pointer"
+            className="bg-[#FFF4DF] rounded-full absolute top-[18px] right-[20px] md:top-10 md:right-10 w-[38px] h-[38px] flex justify-center items-center hover:bg-[#FBE7C1] transition-colors cursor-pointer"
         >
             <FiEdit2 className="stroke-[#F6B83D] w-[15px] h-[15px] " />
         </button>

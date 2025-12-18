@@ -13,7 +13,7 @@ export default function MyNotices() {
     const noticesViewed =
         user && 'noticesViewed' in user ? user.noticesViewed : [];
     return (
-        <div>
+        <div className="xl:w-[664px]">
             <div className="flex gap-2.5 md:gap-2 mb-5 md:mb-9">
                 <button
                     onClick={() => setActiveTab('favourites')}
@@ -50,10 +50,14 @@ export default function MyNotices() {
                         </p>
                     </div>
                 ) : (
-                    <NoticesList notices={noticesFavorites} />
+                    <div className="h-[928px] md:h-[864px] xl:h-[868px] overflow-y-scroll">
+                        <NoticesList notices={noticesFavorites} favoriteList />
+                    </div>
                 )
             ) : (
-                <NoticesList notices={noticesViewed} viewedList />
+                <div className="h-[928px] md:h-[864px] xl:h-[868px] overflow-y-scroll ">
+                    <NoticesList notices={noticesViewed} viewedList />
+                </div>
             )}
         </div>
     );

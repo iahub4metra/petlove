@@ -18,9 +18,14 @@ import { selectUser } from '../../redux/auth/selectors';
 export interface NoticesItemProps {
     pet: Pet;
     viewed?: boolean;
+    favourite?: boolean;
 }
 
-export default function NoticesItem({ pet, viewed }: NoticesItemProps) {
+export default function NoticesItem({
+    pet,
+    viewed,
+    favourite,
+}: NoticesItemProps) {
     const dispatch: AppDispatch = useDispatch();
     const user = useSelector(selectUser);
     const userID = user && '_id' in user ? user._id : undefined;
@@ -56,11 +61,25 @@ export default function NoticesItem({ pet, viewed }: NoticesItemProps) {
         },
     ];
     return (
-        <div className="bg-white rounded-[16px] p-[24px] w-[335px] md:w-[342px] xl:w-[363px]">
+        <div
+            className={`bg-white rounded-[16px] p-[24px] max-w-[335px] w-full md:w-[342px] md:max-w-[342px] ${
+                viewed
+                    ? 'xl:w-[320px] xl:max-w-[320px] xl:p-3.5'
+                    : favourite
+                    ? 'xl:w-[320px] xl:max-w-[320px] xl:p-3.5'
+                    : 'xl:w-[363px] xl:max-w-[363px]'
+            } `}
+        >
             <img
                 src={pet.imgURL}
                 alt="Pet's image"
-                className="w-[287px] md:w-[294px] h-[178px] xl:w-[315px] rounded-[16px] mb-[24px]"
+                className={`w-[287px] md:w-[294px] h-[178px] xl:w-[315px] rounded-[16px] mb-[24px] ${
+                    viewed
+                        ? 'xl:w-[292px] md:mb-3.5 md:h-[162px]'
+                        : favourite
+                        ? 'xl:w-[292px] md:mb-3.5 md:h-[162px]'
+                        : 'xl:w-[315px]'
+                }`}
             />
             <div>
                 <div className="flex items-center justify-between mb-2">
@@ -74,7 +93,7 @@ export default function NoticesItem({ pet, viewed }: NoticesItemProps) {
                         </p>
                     </span>
                 </div>
-                <ul className="flex items-center gap-3.5 mb-4">
+                <ul className="flex items-center gap-2 min-[375px]:gap-3.5 mb-4">
                     {petInfo.map((block, index) => (
                         <li
                             key={index}
@@ -103,7 +122,7 @@ export default function NoticesItem({ pet, viewed }: NoticesItemProps) {
                     <button
                         type="button"
                         onClick={handleLearnMore}
-                        className="bg-[#F6B83D] grow hover:scale-[1.01] hover:bg-[#F9B020] active:scale-[1.01] transition-all duration-500 text-white text-[14px] font-medium leading-[18px] tracking-[-0.42px] py-[14px] px-[80px] cursor-pointer rounded-[30px]"
+                        className="bg-[#F6B83D] grow hover:scale-[1.01] hover:bg-[#F9B020] active:scale-[1.01] transition-all duration-500 text-white text-[14px] font-medium leading-[18px] tracking-[-0.42px] p-[14px] text-center cursor-pointer rounded-[30px]"
                     >
                         Learn more
                     </button>
