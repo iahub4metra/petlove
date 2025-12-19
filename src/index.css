@@ -51,6 +51,17 @@ body {
     background-position: center;
   }
 
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    max-height: 176px;
+    width: 8px;
+    border-radius: 13px;
+    background-color: #26262614;
+  }
+
   @media (min-resolution: 192dpi) {
     .loading-image {
       background-image: url('/images/loading-screen/mobile@2x.jpg');
