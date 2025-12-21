@@ -16,9 +16,9 @@ export default function NoticesList({
         <ul
             className={`flex flex-col gap-5 md:flex-row md:flex-wrap ${
                 viewedList
-                    ? 'xl:gap-y-6 xl:gap-x-2.5'
+                    ? 'xl:gap-y-6 md:gap-x-2.5 '
                     : favoriteList
-                    ? 'xl:gap-y-6 xl:gap-x-2.5'
+                    ? 'xl:gap-y-6 md:gap-x-2.5'
                     : 'xl:gap-x-[31px] xl:gap-y-10'
             }`}
         >
