@@ -37,13 +37,12 @@ export default function ModalEditUser() {
     const user = useSelector(selectUser);
     const [photoURL, setPhotoURL] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
-    const avatarSrc =
-        photoURL || (user && 'avatar' in user ? user.avatar : undefined);
 
     const {
         register,
         reset,
         handleSubmit,
+        watch,
         setValue,
         formState: { errors },
     } = useForm<FormValues>({
@@ -102,6 +101,12 @@ export default function ModalEditUser() {
             });
         }
     }, [user, reset]);
+    const avatarInputValue = watch('avatar');
+
+    const avatarSrc =
+        photoURL ||
+        avatarInputValue ||
+        (user && 'avatar' in user ? user.avatar : undefined);
 
     return (
         <Modal
