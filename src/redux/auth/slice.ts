@@ -122,7 +122,13 @@ const authSlice = createSlice({
             .addCase(removeNoticeFromFavourite.rejected, handleRejected)
             .addCase(getNoticeById.fulfilled, (state, action) => {
                 if (state.user && 'noticesViewed' in state.user) {
-                    state.user.noticesViewed.push(action.payload.forList);
+                    const exists = state.user.noticesViewed.some(
+                        (notice) => notice._id === action.payload.forList._id,
+                    );
+
+                    if (!exists) {
+                        state.user.noticesViewed.push(action.payload.forList);
+                    }
                 }
             });
     },
