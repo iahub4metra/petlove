@@ -38,7 +38,7 @@ export default function MyNotices() {
             </div>
             {activeTab === 'favourites' ? (
                 noticesFavorites.length === 0 ? (
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-center w-full h-full">
                         <p className="text-[14px] leading-[18px] tracking-[-0.24px] text-[#262626] text-center md:max-w-[458px]">
                             Oops,{' '}
                             <span className="text-[#F6B83D]">
@@ -54,6 +54,17 @@ export default function MyNotices() {
                         <NoticesList notices={noticesFavorites} favoriteList />
                     </div>
                 )
+            ) : noticesViewed.length === 0 ? (
+                <div className="flex items-center justify-center w-full h-full">
+                    <p className="text-[14px] leading-[18px] tracking-[-0.24px] text-[#262626] text-center md:max-w-[458px]">
+                        Oops,{' '}
+                        <span className="text-[#F6B83D]">
+                            looks like you haven't viewed any pets yet.
+                        </span>{' '}
+                        Open an ad with "Learn more" to see pet details —
+                        they'll appear here.
+                    </p>
+                </div>
             ) : (
                 <div className="h-[928px] md:h-[864px] xl:h-[868px] overflow-y-scroll  relative custom-scrollbar">
                     <NoticesList notices={noticesViewed} viewedList />
