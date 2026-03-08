@@ -19,6 +19,7 @@ const OurFriendsPage = lazy(
     () => import('../../pages/OurFriendsPage/OurFriendsPage'),
 );
 const ProfilePage = lazy(() => import('../../pages/ProfilePage/ProfilePage'));
+const AddPetPage = lazy(() => import('../../pages/AddPetPage/AddPetPage'));
 
 export default function Layout() {
     const { isHome } = useContext(PageContext);
@@ -60,6 +61,7 @@ export default function Layout() {
                         <Route path="/news" element={<NewsPage />} />
                         <Route path="/notices" element={<NoticesPage />} />
                         <Route path="/friends" element={<OurFriendsPage />} />
+                        <Route path="/add-pet" element={<AddPetPage />} />
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </Suspense>
