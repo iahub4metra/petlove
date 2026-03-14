@@ -45,7 +45,7 @@ export default function MyNotices() {
                                 looks like there aren't any furries
                             </span>{' '}
                             on our adorable page yet. Do not worry! View your
-                            pets on the "find your favorite pet" page and add
+                            pets on the "Find your favorite pet" page and add
                             them to your favorites.
                         </p>
                     </div>
@@ -61,8 +61,8 @@ export default function MyNotices() {
                         <span className="text-[#F6B83D]">
                             looks like you haven't viewed any pets yet.
                         </span>{' '}
-                        Open an ad with "Learn more" to see pet details —
-                        they'll appear here.
+                        Explore our adorable listings on the "Find your favorite
+                        pet" page and learn more about the pets you like.
                     </p>
                 </div>
             ) : (
