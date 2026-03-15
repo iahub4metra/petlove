@@ -46,3 +46,15 @@ export const editUserSchema = yup.object({
         .matches(phoneExp, 'Enter a valid phone number')
         .required(),
 });
+
+export const addPetSchema = yup.object({
+    title: yup.string().required('Title is required'),
+    name: yup.string().required('Name is required'),
+    species: yup.string().required('Select species'),
+    sex: yup.string().required('Select sex'),
+    imgUrl: yup.string().matches(avatarExp, 'Enter a valid URL').required(),
+    birthday: yup
+        .string()
+        .matches(/^d{4}-d{2}-d{2}$/, 'Enter a valid Date')
+        .required('Birthday date is required'),
+});
