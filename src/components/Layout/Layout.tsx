@@ -58,10 +58,18 @@ export default function Layout() {
                                 />
                             }
                         />
+                        <Route
+                            path="/add-pet"
+                            element={
+                                <PrivateRoute
+                                    component={<AddPetPage />}
+                                    redirectTo="/"
+                                />
+                            }
+                        />
                         <Route path="/news" element={<NewsPage />} />
                         <Route path="/notices" element={<NoticesPage />} />
                         <Route path="/friends" element={<OurFriendsPage />} />
-                        <Route path="/add-pet" element={<AddPetPage />} />
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </Suspense>
