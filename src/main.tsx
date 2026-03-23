@@ -1,5 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import App from './components/App/App';
 import { BrowserRouter } from 'react-router';
 import './index.css';
@@ -15,7 +17,9 @@ createRoot(document.getElementById('root') as HTMLElement).render(
             <Provider store={store}>
                 <BrowserRouter>
                     <PageProvider>
-                        <App />
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <App />
+                        </LocalizationProvider>
                     </PageProvider>
                 </BrowserRouter>
             </Provider>
