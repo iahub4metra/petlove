@@ -55,6 +55,6 @@ export const addPetSchema = yup.object({
     imgUrl: yup.string().matches(avatarExp, 'Enter a valid URL').required(),
     birthday: yup
         .string()
-        .matches(/^d{2}-d{2}-d{4}$/, 'Enter a valid Date')
+        .matches(/^d{4}-d{2}-d{2}$/, 'Enter a valid Date')
         .required('Birthday date is required'),
 });
