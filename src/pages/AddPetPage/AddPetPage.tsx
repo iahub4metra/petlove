@@ -3,8 +3,8 @@ import PetBlock from '../../components/PetBlock/PetBlock';
 
 export default function AddPetPage() {
     return (
-        <section>
-            <div className="adaptive-container">
+        <section className="addPet-page-container">
+            <div className="gap-8 xl:flex">
                 <PetBlock />
                 <AddPetForm />
             </div>

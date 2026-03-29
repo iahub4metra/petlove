@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import {
     Avatar,
     Button,
+    FormHelperText,
     MenuItem,
     Select,
     styled,
@@ -12,6 +13,7 @@ import { IoMdFemale } from 'react-icons/io';
 import { IoMdMale } from 'react-icons/io';
 import { IoCloudUploadOutline } from 'react-icons/io5';
 import { LiaPawSolid } from 'react-icons/lia';
+import { FiCalendar } from 'react-icons/fi';
 import { addPetSchema } from '../../utils/validationSchema';
 import { useEffect, useState } from 'react';
 import type { AppDispatch } from '../../redux/store';
@@ -19,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import { getSpecies } from '../../redux/notices/operations';
 import { DateField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
+import { Link } from 'react-router';
 
 export interface FormValues {
     title: string;
@@ -109,15 +112,15 @@ export default function AddPetForm() {
     };
 
     return (
-        <div className="bg-white rounded-[30px] px-5 py-[28px] md:py-[40px] md:flex flex-col items-center mt-2.5 md:mt-[16px]">
-            <h3 className="text-[28px] md:text-[32px] leading-7 md:leading-8 font-bold text-[#262626] tracking-[-0.36px] flex items-center gap-2">
-                Add my pet /{' '}
-                <span className="font-bold text-[14px] md:text-[16px] text-[#2B2B2A40] leading-[18px] md:leading-5">
-                    Personal details
-                </span>
-            </h3>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex items-center justify-start gap-2 mt-6">
+        <div className="bg-white rounded-[30px] px-5 py-[28px] md:py-[40px] md:flex flex-col items-center mt-2.5 md:mt-[16px] xl:mt-0 xl:px-[80px]">
+            <form onSubmit={handleSubmit(onSubmit)} className="md:w-[432px]">
+                <h3 className="text-[28px] md:text-[32px] leading-7 md:leading-8 font-bold text-[#262626] tracking-[-0.36px] flex items-center gap-2 text-start">
+                    Add my pet /{' '}
+                    <span className="font-bold text-[14px] md:text-[16px] text-[#2B2B2A40] leading-[18px] md:leading-5">
+                        Personal details
+                    </span>
+                </h3>
+                <div className="flex items-center justify-start gap-2 mt-6 md:mt-10">
                     <label className="relative bg-[#F43F5E10] w-[32px] h-[32px] md:w-[40px] md:h-[40px] rounded-full flex justify-center items-center has-checked:bg-[#F43F5E]">
                         <input
                             type="radio"
@@ -149,25 +152,28 @@ export default function AddPetForm() {
                         </div>
                     </label>
                 </div>
-                {imgSrc ? (
-                    <Avatar
-                        src={imgSrc}
-                        alt="Pet’s photo"
-                        sx={{
-                            width: 68,
-                            height: 68,
-                            '@media screen and (min-width: 768px)': {
-                                width: 86,
-                                height: 86,
-                            },
-                        }}
-                    />
-                ) : (
-                    <div className="bg-[#FFF4DF] rounded-full flex justify-center items-center w-[68px] h-[68px] md:w-[86px] md:h-[86px]">
-                        <LiaPawSolid className="fill-[#F6B83D] w-[34px] h-[34px] md:w-[44px] md:h-[44px]" />
-                    </div>
-                )}
-                <div className="flex gap-2 md:gap-0 md:justify-between mt-[16px]">
+                <div className="flex justify-center mt-2 md:-mt-[22px]">
+                    {imgSrc ? (
+                        <Avatar
+                            src={imgSrc}
+                            alt="Pet’s photo"
+                            sx={{
+                                width: 68,
+                                height: 68,
+                                '@media screen and (min-width: 768px)': {
+                                    width: 86,
+                                    height: 86,
+                                },
+                            }}
+                        />
+                    ) : (
+                        <div className="bg-[#FFF4DF] rounded-full flex justify-center items-center w-[68px] h-[68px] md:w-[86px] md:h-[86px]">
+                            <LiaPawSolid className="fill-[#F6B83D] w-[34px] h-[34px] md:w-[44px] md:h-[44px]" />
+                        </div>
+                    )}
+                </div>
+
+                <div className="flex gap-2 mt-[16px] md:mt-3">
                     <TextField
                         sx={{
                             '& input:-webkit-autofill': {
@@ -179,9 +185,11 @@ export default function AddPetForm() {
                             },
                             '& .MuiInputBase-root': {
                                 borderRadius: '30px',
-                                width: '161px',
+                                width: '170px',
+                                maxHeight: '36px',
                                 '@media screen and (min-width: 768px)': {
-                                    width: '226px',
+                                    width: '278px',
+                                    maxHeight: '42px',
                                 },
                                 '&:hover .MuiOutlinedInput-notchedOutline': {
                                     borderColor: '#F6B83D',
@@ -204,7 +212,11 @@ export default function AddPetForm() {
                             },
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
-                                    borderColor: '#26262626',
+                                    borderColor: `${
+                                        watch('imgUrl')
+                                            ? '#F6B83D'
+                                            : '#26262626'
+                                    }`,
                                 },
                                 '&.Mui-focused fieldset': {
                                     borderColor: '#F6B83D',
@@ -223,18 +235,20 @@ export default function AddPetForm() {
                         variant="contained"
                         loading={loading}
                         endIcon={
-                            <IoCloudUploadOutline className="w-[18px] h-[18px] stroke-[#F6B83D] m-0" />
+                            <IoCloudUploadOutline className="w-[16px] md:w-[18px] h-[16px] md:h-[18px] stroke-[#F6B83D] m-0" />
                         }
                         sx={{
                             border: '0',
+                            maxHeight: '36px',
                             backgroundColor: '#FFF4DF',
+                            width: '117px',
                             color: '#262626',
                             boxShadow: '0',
                             borderRadius: '30px',
                             textTransform: 'none',
                             fontSize: '12px',
                             lineHeight: '16px',
-                            padding: '12px',
+                            padding: '10px',
                             '&:hover': {
                                 boxShadow: '0',
                             },
@@ -243,6 +257,9 @@ export default function AddPetForm() {
                                 fontSize: '14px',
                                 lineHeight: '18px',
                                 letterSpacing: '-0.24px',
+                                maxHeight: '42px',
+                                paddingBlock: '12px',
+                                paddingInline: '16px',
                             },
                         }}
                     >
@@ -254,7 +271,7 @@ export default function AddPetForm() {
                         />
                     </Button>
                 </div>
-                <div className="flex flex-col gap-2.5 md:gap-[18px] mt-2.5 md:mt-[18px] mb-[200px]">
+                <div className="flex flex-col gap-2.5 md:gap-[18px] mt-2.5 md:mt-[18px] mb-[31px] md:mb-[40px]">
                     <TextField
                         sx={{
                             '& input:-webkit-autofill': {
@@ -267,6 +284,10 @@ export default function AddPetForm() {
                             '& .MuiInputBase-root': {
                                 borderRadius: '30px',
                                 borderColor: '#26262626',
+                                maxHeight: '42px',
+                                '@media screen and (min-width: 768px)': {
+                                    maxHeight: '52px',
+                                },
                                 '&:hover .MuiOutlinedInput-notchedOutline': {
                                     borderColor: '#F6B83D',
                                 },
@@ -288,7 +309,9 @@ export default function AddPetForm() {
                             },
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
-                                    borderColor: '#26262626',
+                                    borderColor: `${
+                                        watch('title') ? '#F6B83D' : '#26262626'
+                                    }`,
                                 },
                                 '&.Mui-focused fieldset': {
                                     borderColor: '#F6B83D',
@@ -314,6 +337,10 @@ export default function AddPetForm() {
                             '& .MuiInputBase-root': {
                                 borderRadius: '30px',
                                 borderColor: '#26262626',
+                                maxHeight: '42px',
+                                '@media screen and (min-width: 768px)': {
+                                    maxHeight: '52px',
+                                },
                                 '&:hover .MuiOutlinedInput-notchedOutline': {
                                     borderColor: '#F6B83D',
                                 },
@@ -335,7 +362,9 @@ export default function AddPetForm() {
                             },
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
-                                    borderColor: '#26262626',
+                                    borderColor: `${
+                                        watch('name') ? '#F6B83D' : '#26262626'
+                                    }`,
                                 },
                                 '&.Mui-focused fieldset': {
                                     borderColor: '#F6B83D',
@@ -349,7 +378,7 @@ export default function AddPetForm() {
                         helperText={errors.name?.message}
                         error={Boolean(errors.name)}
                     />
-                    <div className="flex flex-wrap">
+                    <div className="flex flex-wrap gap-2 md:gap-3">
                         <Controller
                             control={control}
                             name="birthday"
@@ -368,19 +397,60 @@ export default function AddPetForm() {
                                                 : '',
                                         );
                                     }}
+                                    endAdornment={
+                                        <FiCalendar className="w-[18px] h-[18px] md:w-[20px] md:h-[20px]" />
+                                    }
+                                    sx={{
+                                        '& .MuiPickersInputBase-root': {
+                                            borderRadius: '30px',
+                                            maxWidth: '144px',
+                                            maxHeight: '42px',
+                                            '@media screen and (min-width: 768px)':
+                                                {
+                                                    maxWidth: '210px',
+                                                    maxHeight: '52px',
+                                                },
+                                        },
+
+                                        '& .MuiPickersInputBase-sectionsContainer':
+                                            {
+                                                fontSize: '14px',
+                                                lineHeight: '18px',
+                                                letterSpacing: '-0.36px',
+                                                color: '#262626',
+                                            },
+                                        '& .MuiPickersOutlinedInput-root': {
+                                            borderColor: '#26262626',
+                                            '& fieldset': {
+                                                borderColor: '#26262626',
+                                                transition:
+                                                    'all 250ms cubic-bezier(0.4, 0.2, 0, 0.1)',
+                                            },
+                                            '&:hover fieldset': {
+                                                borderColor: '#F6B83D',
+                                            },
+                                        },
+                                        '& .MuiPickersOutlinedInput-root.Mui-focused .MuiPickersOutlinedInput-notchedOutline':
+                                            {
+                                                borderColor: '#F6B83D',
+                                            },
+                                    }}
+                                    disableFuture
+                                    helperText={errors.birthday?.message}
+                                    error={Boolean(errors.birthday)}
                                 />
                             )}
                         />
-
-                        <div>
-                            <Controller
-                                control={control}
-                                name="species"
-                                defaultValue=""
-                                render={({ field }) => (
+                        <Controller
+                            control={control}
+                            name="species"
+                            defaultValue=""
+                            render={({ field }) => (
+                                <>
                                     <Select
                                         id="demo-simple-select"
                                         displayEmpty
+                                        error={Boolean(errors.species)}
                                         {...field}
                                         renderValue={(selected) => {
                                             if (!selected) {
@@ -401,16 +471,26 @@ export default function AddPetForm() {
                                             );
                                         }}
                                         sx={{
+                                            maxWidth: '143px',
                                             width: '100%',
                                             bgcolor: 'white',
                                             borderColor: '#26262626',
+                                            maxHeight: '42px',
                                             borderRadius: '30px',
+                                            '@media screen and (min-width: 768px)':
+                                                {
+                                                    maxHeight: '52px',
+                                                    maxWidth: '210px',
+                                                },
                                             '&.MuiOutlinedInput-root': {
                                                 borderRadius: '30px',
+                                                width: 'full',
                                                 transition:
                                                     'all 250ms cubic-bezier(0.4, 0.2, 0, 0.1)',
                                                 '& fieldset': {
                                                     borderColor: '#26262626',
+                                                    transition:
+                                                        'all 250ms cubic-bezier(0.4, 0.2, 0, 0.1)',
                                                 },
 
                                                 '&:hover fieldset': {
@@ -503,15 +583,29 @@ export default function AddPetForm() {
                                             </MenuItem>
                                         ))}
                                     </Select>
-                                )}
-                            />
-                        </div>
+                                    {Boolean(errors.species) && (
+                                        <FormHelperText
+                                            className="Mui-error"
+                                            sx={{ marginInline: '14px' }}
+                                        >
+                                            {errors.species?.message}
+                                        </FormHelperText>
+                                    )}
+                                </>
+                            )}
+                        />
                     </div>
                 </div>
-                <div>
+                <div className="flex justify-end gap-2">
+                    <Link
+                        to="/profile"
+                        className="cursor-pointer transition-colors hover:bg-[#26262610] rounded-[30px] px-[34px] md:px-[67px] py-[12px] md:py-[14px] text-[#262626] font-bold text-[14px] md:text-[16px] leading-[18px] md:leading-5 tracking-[-0.36px] bg-[#26262605]"
+                    >
+                        Back
+                    </Link>
                     <button
                         type="submit"
-                        className="text-white text-[14px] md:text-[16px] leading-[18px] md:leading-5 tracking-[-0.36px] font-bold rounded-[30px] bg-[#F6B83D] py-[12px] md:py-[14px] px-[26px] md:px-[58px] cursor-pointer"
+                        className="text-white transition-colors hover:bg-[#F9B020] text-[14px] md:text-[16px] leading-[18px] md:leading-5 tracking-[-0.36px] font-bold rounded-[30px] bg-[#F6B83D] py-[12px] md:py-[14px] px-[26px] md:px-[58px] cursor-pointer"
                     >
                         Submit
                     </button>

@@ -37,6 +37,13 @@ body {
     width: 100%;
   }
 
+  .addPet-page-container {
+    margin: 0 auto;
+    max-width: 375px;
+    width: 100%;
+    padding: 0 20px;
+  }
+
   .home-header {
     padding: 18px 20px 28px 20px;
     max-width: 335px;
@@ -91,6 +98,11 @@ body {
       padding-top: 16px;
     }
 
+    .addPet-page-container {
+      max-width: 768px;
+      padding: 0 32px;
+    }
+
     .home-header {
       max-width: 704px;
       padding: 16px 32px 32px 32px;
@@ -115,6 +127,10 @@ body {
 
     .home-container {
       max-width: 1216px;
+    }
+
+    .addPet-page-container {
+      max-width: 1280px;
     }
 
     .loading-image {
