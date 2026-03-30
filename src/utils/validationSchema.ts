@@ -53,7 +53,7 @@ export const addPetSchema = yup.object({
     name: yup.string().required('Name is required'),
     species: yup.string().required('Select species'),
     sex: yup.string().required('Select sex'),
-    imgUrl: yup.string().matches(avatarExp, 'Enter a valid URL').required(),
+    imgURL: yup.string().matches(avatarExp, 'Enter a valid URL').required(),
     birthday: yup
         .string()
         .required('Birthday date is required')
