@@ -429,8 +429,14 @@ export default function AddPetForm() {
                                             '&:hover fieldset': {
                                                 borderColor: '#F6B83D',
                                             },
+                                            '&.Mui-error fieldset': {
+                                                borderColor: '#EF2447',
+                                            },
+                                            '&:hover.Mui-error fieldset': {
+                                                borderColor: '#F6B83D',
+                                            },
                                         },
-                                        '& .MuiPickersOutlinedInput-root.Mui-focused .MuiPickersOutlinedInput-notchedOutline':
+                                        '& .MuiPickersOutlinedInput-root.Mui-focused:not(.Mui-error) .MuiPickersOutlinedInput-notchedOutline':
                                             {
                                                 borderColor: '#F6B83D',
                                             },
@@ -446,7 +452,7 @@ export default function AddPetForm() {
                             name="species"
                             defaultValue=""
                             render={({ field }) => (
-                                <>
+                                <div className="w-[143px] md:w-[210px]">
                                     <Select
                                         id="demo-simple-select"
                                         displayEmpty
@@ -484,7 +490,7 @@ export default function AddPetForm() {
                                                 },
                                             '&.MuiOutlinedInput-root': {
                                                 borderRadius: '30px',
-                                                width: 'full',
+                                                width: '100%',
                                                 transition:
                                                     'all 250ms cubic-bezier(0.4, 0.2, 0, 0.1)',
                                                 '& fieldset': {
@@ -591,7 +597,7 @@ export default function AddPetForm() {
                                             {errors.species?.message}
                                         </FormHelperText>
                                     )}
-                                </>
+                                </div>
                             )}
                         />
                     </div>
