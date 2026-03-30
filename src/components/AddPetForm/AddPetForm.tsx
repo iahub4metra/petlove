@@ -111,6 +111,7 @@ export default function AddPetForm() {
         console.log('submitted', data);
         dispatch(addPet(data));
         reset();
+        setPhotoURL('');
     };
 
     return (
