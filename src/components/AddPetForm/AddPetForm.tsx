@@ -22,13 +22,14 @@ import { getSpecies } from '../../redux/notices/operations';
 import { DateField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { Link } from 'react-router';
+import { addPet } from '../../redux/auth/operations';
 
 export interface FormValues {
     title: string;
     name: string;
     birthday: string;
     species: string;
-    imgUrl: string;
+    imgURL: string;
     sex: string;
 }
 
@@ -72,7 +73,7 @@ export default function AddPetForm() {
         fetchSpecies();
     }, [dispatch]);
 
-    const imgUrlInputValue = watch('imgUrl');
+    const imgUrlInputValue = watch('imgURL');
 
     const onFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -95,7 +96,7 @@ export default function AddPetForm() {
             );
             const data = await res.json();
             setPhotoURL(data.secure_url);
-            setValue('imgUrl', data.secure_url);
+            setValue('imgURL', data.secure_url);
         } catch (error) {
             console.log(error); // зробити щось !!!!!!!
 
@@ -108,6 +109,7 @@ export default function AddPetForm() {
     const imgSrc = photoURL || imgUrlInputValue;
     const onSubmit = (data: FormValues) => {
         console.log('submitted', data);
+        dispatch(addPet(data));
         reset();
     };
 
@@ -124,7 +126,7 @@ export default function AddPetForm() {
                     <label className="relative bg-[#F43F5E10] w-[32px] h-[32px] md:w-[40px] md:h-[40px] rounded-full flex justify-center items-center has-checked:bg-[#F43F5E]">
                         <input
                             type="radio"
-                            value="Female"
+                            value="female"
                             {...register('sex')}
                             className="absolute top-0 left-0 opacity-0 cursor-pointer peer"
                         />
@@ -133,7 +135,7 @@ export default function AddPetForm() {
                     <label className="relative bg-[#54ADFF10] w-[32px] h-[32px] md:w-[40px] md:h-[40px] rounded-full flex justify-center items-center has-checked:bg-[#54ADFF]">
                         <input
                             type="radio"
-                            value="Male"
+                            value="male"
                             {...register('sex')}
                             className="absolute top-0 left-0 opacity-0 cursor-pointer peer"
                         />
@@ -142,7 +144,7 @@ export default function AddPetForm() {
                     <label className="relative bg-[#FFF4DF] w-[32px] h-[32px] md:w-[40px] md:h-[40px] rounded-full flex justify-center items-center has-checked:bg-[#F6B83D]">
                         <input
                             type="radio"
-                            value="Multiple"
+                            value="multiple"
                             {...register('sex')}
                             className="absolute top-0 left-0 opacity-0 cursor-pointer peer"
                         />
@@ -213,7 +215,7 @@ export default function AddPetForm() {
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
                                     borderColor: `${
-                                        watch('imgUrl')
+                                        watch('imgURL')
                                             ? '#F6B83D'
                                             : '#26262626'
                                     }`,
@@ -226,9 +228,9 @@ export default function AddPetForm() {
                         type="text"
                         placeholder="Enter URL"
                         variant="outlined"
-                        {...register('imgUrl')}
-                        helperText={errors.imgUrl?.message}
-                        error={Boolean(errors.imgUrl)}
+                        {...register('imgURL')}
+                        helperText={errors.imgURL?.message}
+                        error={Boolean(errors.imgURL)}
                     />
                     <Button
                         component="label"
