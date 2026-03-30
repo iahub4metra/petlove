@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { BaseUser, FullUser } from '../../components/App/types';
 import {
+    addPet,
     editUser,
     getCurrentUserFull,
     signIn,
@@ -129,6 +130,13 @@ const authSlice = createSlice({
                     if (!exists) {
                         state.user.noticesViewed.push(action.payload.forList);
                     }
+                }
+            })
+            .addCase(addPet.pending, handlePending)
+            .addCase(addPet.rejected, handleRejected)
+            .addCase(addPet.fulfilled, (state, action) => {
+                if (state.user && 'pets' in state.user) {
+                    state.user.pets = action.payload.pets;
                 }
             });
     },

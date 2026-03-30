@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type { FullUser } from '../../components/App/types';
 import type { FormValues as UserEditCredentials } from '../../components/ModalEditUser/ModalEditUser';
+import type { FormValues } from '../../components/AddPetForm/AddPetForm';
 
 interface SignUpPayload {
     name: string;
@@ -146,3 +147,24 @@ export const editUser = createAsyncThunk<
         return thunkAPI.rejectWithValue(message);
     }
 });
+
+export const addPet = createAsyncThunk<CurrentFullResponse, FormValues>(
+    'auth/current/pets/add',
+    async (petInfo, thunkAPI) => {
+        try {
+            const token = localStorage.getItem('token');
+            const data = await axios.post('users/current/pets/add', petInfo, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return data.data;
+        } catch (error) {
+            let message = 'Unknown error';
+
+            if (error instanceof Error) {
+                message = error.message;
+            }
+
+            return thunkAPI.rejectWithValue(message);
+        }
+    },
+);
