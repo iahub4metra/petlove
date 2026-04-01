@@ -168,3 +168,28 @@ export const addPet = createAsyncThunk<CurrentFullResponse, FormValues>(
         }
     },
 );
+
+export const removePet = createAsyncThunk<CurrentFullResponse, string>(
+    'auth/current/pets/remove',
+    async (petId, thunkAPI) => {
+        try {
+            const token = localStorage.getItem('token');
+            const data = await axios.delete(
+                `users/current/pets/remove/${petId}`,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                },
+            );
+
+            return data.data;
+        } catch (error) {
+            let message = 'Unknown error';
+
+            if (error instanceof Error) {
+                message = error.message;
+            }
+
+            return thunkAPI.rejectWithValue(message);
+        }
+    },
+);

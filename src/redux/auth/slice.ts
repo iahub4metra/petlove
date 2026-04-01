@@ -4,6 +4,7 @@ import {
     addPet,
     editUser,
     getCurrentUserFull,
+    removePet,
     signIn,
     signOut,
     signUp,
@@ -135,6 +136,13 @@ const authSlice = createSlice({
             .addCase(addPet.pending, handlePending)
             .addCase(addPet.rejected, handleRejected)
             .addCase(addPet.fulfilled, (state, action) => {
+                if (state.user && 'pets' in state.user) {
+                    state.user.pets = action.payload.pets;
+                }
+            })
+            .addCase(removePet.pending, handlePending)
+            .addCase(removePet.rejected, handleRejected)
+            .addCase(removePet.fulfilled, (state, action) => {
                 if (state.user && 'pets' in state.user) {
                     state.user.pets = action.payload.pets;
                 }
