@@ -21,7 +21,7 @@ import { useDispatch } from 'react-redux';
 import { getSpecies } from '../../redux/notices/operations';
 import { DateField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { addPet } from '../../redux/auth/operations';
 
 export interface FormValues {
@@ -50,6 +50,7 @@ export default function AddPetForm() {
     const [species, setSpecies] = useState<string[]>();
     const [photoURL, setPhotoURL] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     const {
         register,
@@ -112,6 +113,7 @@ export default function AddPetForm() {
         dispatch(addPet(data));
         reset();
         setPhotoURL('');
+        navigate('/profile');
     };
 
     return (
@@ -425,7 +427,11 @@ export default function AddPetForm() {
                                         '& .MuiPickersOutlinedInput-root': {
                                             borderColor: '#26262626',
                                             '& fieldset': {
-                                                borderColor: '#26262626',
+                                                borderColor: `${
+                                                    watch('birthday')
+                                                        ? '#F6B83D'
+                                                        : '#26262626'
+                                                }`,
                                                 transition:
                                                     'all 250ms cubic-bezier(0.4, 0.2, 0, 0.1)',
                                             },
@@ -497,7 +503,11 @@ export default function AddPetForm() {
                                                 transition:
                                                     'all 250ms cubic-bezier(0.4, 0.2, 0, 0.1)',
                                                 '& fieldset': {
-                                                    borderColor: '#26262626',
+                                                    borderColor: `${
+                                                        watch('species')
+                                                            ? '#F6B83D'
+                                                            : '#26262626'
+                                                    }`,
                                                     transition:
                                                         'all 250ms cubic-bezier(0.4, 0.2, 0, 0.1)',
                                                 },
