@@ -8,6 +8,15 @@ interface InitialValue {
     totalPages: number;
     keyword: string;
     loading: boolean;
+    operations: {
+        news: {
+            status: 'idle' | 'loading' | 'succeeded' | 'failed';
+            error: {
+                message: string;
+                status?: number;
+            } | null;
+        };
+    };
 }
 
 const initialState: InitialValue = {
@@ -16,14 +25,12 @@ const initialState: InitialValue = {
     keyword: '',
     totalPages: 0,
     loading: false,
-};
-
-const handlePending = (state: InitialValue) => {
-    state.loading = true;
-};
-
-const handleRejected = (state: InitialValue) => {
-    state.loading = false;
+    operations: {
+        news: {
+            status: 'idle',
+            error: null,
+        },
+    },
 };
 
 const newsSlice = createSlice({
@@ -39,15 +46,21 @@ const newsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getNews.pending, handlePending)
+            .addCase(getNews.pending, (state) => {
+                state.operations.news.status = 'loading';
+                state.operations.news.error = null;
+            })
             .addCase(getNews.fulfilled, (state, action) => {
                 state.news = action.payload.results;
-                state.loading = false;
+                state.operations.news.status = 'succeeded';
                 state.keyword = action.meta.arg.keyword;
                 state.page = action.payload.page;
                 state.totalPages = action.payload.totalPages;
             })
-            .addCase(getNews.rejected, handleRejected);
+            .addCase(getNews.rejected, (state, action) => {
+                state.operations.news.error = action.payload ?? null;
+                state.operations.news.status = 'failed';
+            });
     },
 });
 

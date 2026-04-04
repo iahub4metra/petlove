@@ -15,26 +15,35 @@ interface NewsPayload {
     limit?: 4 | 6;
 }
 
-export const getNews = createAsyncThunk<NewsResponse, NewsPayload>(
-    'news/all',
-    async ({ keyword, page = 1, limit = 6 }, thunkAPI) => {
-        try {
-            const params: Record<string, string | number> = {};
+type ApiError = {
+    message: string;
+    status?: number;
+};
 
-            if (page !== undefined) params.page = page;
-            if (limit !== undefined) params.limit = limit;
-            if (keyword) params.keyword = keyword;
-            const response = await axios.get('/news', { params });
+export const getNews = createAsyncThunk<
+    NewsResponse,
+    NewsPayload,
+    { rejectValue: ApiError }
+>('news/all', async ({ keyword, page = 1, limit = 6 }, thunkAPI) => {
+    try {
+        const params: Record<string, string | number> = {};
 
-            return response.data;
-        } catch (error) {
-            let message = 'Unknown error';
+        if (page !== undefined) params.page = page;
+        if (limit !== undefined) params.limit = limit;
+        if (keyword) params.keyword = keyword;
+        const response = await axios.get('/news', { params });
 
-            if (error instanceof Error) {
-                message = error.message;
-            }
-
-            return thunkAPI.rejectWithValue(message);
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
+            });
         }
-    },
-);
+
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
+    }
+});
