@@ -1,9 +1,20 @@
 import { useSelector } from 'react-redux';
-import { selectNews } from '../../redux/news/selectors';
+import { selectNews, selectNewsOperations } from '../../redux/news/selectors';
 import NewsItem from './NewsItem';
+import NewsListSkeleton from './NewsListSkeleton';
+import ErrorState from '../Errors/ErrorState';
 
 export default function NewsList() {
     const news = useSelector(selectNews);
+    const operations = useSelector(selectNewsOperations);
+
+    if (operations.news.status === 'succeeded') {
+        return <NewsListSkeleton />;
+    }
+
+    if (operations.news.status === 'failed') {
+        return <ErrorState error={operations.news.error} />;
+    }
 
     return (
         <ul className="flex flex-col items-center gap-6 md:flex-wrap md:flex-row md:gap-x-6 md:gap-y-8 xl:gap-x-[35px] xl:gap-y-[40px]">
