@@ -6,7 +6,7 @@ import { getNews } from '../../redux/news/operations';
 import NewsList from '../../components/News/NewsList';
 import {
     selectKeyword,
-    selectNewsLoading,
+    selectNewsOperations,
     selectPage,
     selectTotalPages,
 } from '../../redux/news/selectors';
@@ -19,7 +19,10 @@ export default function NewsPage() {
     const page = useSelector(selectPage);
     const keyword = useSelector(selectKeyword);
     const totalPages = useSelector(selectTotalPages);
-    const loading = useSelector(selectNewsLoading);
+    const operations = useSelector(selectNewsOperations);
+    const loading =
+        operations.news.status === 'loading' ||
+        operations.news.status === 'failed';
 
     useEffect(() => {
         dispatch(getNews({ limit: 6, page: page, keyword: keyword }));
