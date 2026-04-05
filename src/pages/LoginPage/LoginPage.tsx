@@ -1,4 +1,4 @@
-import LoginForm from '../../components/AuthForms/LoginFrom';
+import LoginForm from '../../components/AuthForms/LoginForm';
 import PetBlock from '../../components/PetBlock/PetBlock';
 
 export default function LoginPage() {
