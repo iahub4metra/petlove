@@ -8,7 +8,7 @@ export default function NewsList() {
     const news = useSelector(selectNews);
     const operations = useSelector(selectNewsOperations);
 
-    if (operations.news.status === 'succeeded') {
+    if (operations.news.status === 'loading') {
         return <NewsListSkeleton />;
     }
 
