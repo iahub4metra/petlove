@@ -15,7 +15,7 @@ export default function ErrorState({ error }: ErrorStateProps) {
 
     return (
         <div className="flex flex-col items-center justify-center gap-2.5 mt-[40px] md:mt-[80px]">
-            <h2 className="text-5xl">{error?.status}</h2>
+            <h2 className="text-5xl">Ooops!</h2>
             <p className="text-[16px]">{message}</p>
         </div>
     );
