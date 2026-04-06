@@ -84,3 +84,11 @@ export type UserPets = Omit<
     Pet,
     'price' | 'location' | 'category' | 'comment' | 'user' | 'popularity'
 >;
+
+export type operationStatus = {
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    error: {
+        message: string;
+        status?: number;
+    } | null;
+};

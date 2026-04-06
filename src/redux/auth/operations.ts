@@ -22,70 +22,87 @@ interface SignResponse {
 
 type CurrentFullResponse = FullUser;
 
+type ApiError = {
+    message: string;
+    status?: number;
+};
+
 axios.defaults.baseURL = 'https://petlove.b.goit.study/api';
 
-export const signUp = createAsyncThunk<SignResponse, SignUpPayload>(
-    'auth/signUp',
-    async (userCredentials, thunkAPI) => {
-        try {
-            const data = await axios.post('/users/signup', userCredentials);
-            localStorage.setItem('token', data.data.token);
+export const signUp = createAsyncThunk<
+    SignResponse,
+    SignUpPayload,
+    { rejectValue: ApiError }
+>('auth/signUp', async (userCredentials, thunkAPI) => {
+    try {
+        const data = await axios.post('/users/signup', userCredentials);
+        localStorage.setItem('token', data.data.token);
 
-            return data.data;
-        } catch (error) {
-            let message = 'Unknown error';
-
-            if (error instanceof Error) {
-                message = error.message;
-            }
-
-            return thunkAPI.rejectWithValue(message);
+        return data.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
+            });
         }
-    },
-);
 
-export const signIn = createAsyncThunk<SignResponse, SignInPayload>(
-    'auth/signin',
-    async (userCredentials, thunkAPI) => {
-        try {
-            const data = await axios.post('users/signin', userCredentials);
-            localStorage.setItem('token', data.data.token);
-            return data.data;
-        } catch (error) {
-            let message = 'Unknown error';
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
+    }
+});
 
-            if (error instanceof Error) {
-                message = error.message;
-            }
-
-            return thunkAPI.rejectWithValue(message);
+export const signIn = createAsyncThunk<
+    SignResponse,
+    SignInPayload,
+    { rejectValue: ApiError }
+>('auth/signin', async (userCredentials, thunkAPI) => {
+    try {
+        const data = await axios.post('users/signin', userCredentials);
+        localStorage.setItem('token', data.data.token);
+        return data.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
+            });
         }
-    },
-);
 
-export const signOut = createAsyncThunk<void, string | null>(
-    'auth/signout',
-    async (token, thunkAPI) => {
-        try {
-            await axios.post(
-                'users/signout',
-                {},
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                },
-            );
-            localStorage.removeItem('token');
-        } catch (error) {
-            let message = 'Unknown error';
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
+    }
+});
 
-            if (error instanceof Error) {
-                message = error.message;
-            }
-
-            return thunkAPI.rejectWithValue(message);
+export const signOut = createAsyncThunk<
+    void,
+    string | null,
+    { rejectValue: ApiError }
+>('auth/signout', async (token, thunkAPI) => {
+    try {
+        await axios.post(
+            'users/signout',
+            {},
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            },
+        );
+        localStorage.removeItem('token');
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
+            });
         }
-    },
-);
+
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
+    }
+});
 
 // export const getCurrentUser = createAsyncThunk<CurrentResponse, string>(
 //     'auth/current',
@@ -148,26 +165,30 @@ export const editUser = createAsyncThunk<
     }
 });
 
-export const addPet = createAsyncThunk<CurrentFullResponse, FormValues>(
-    'auth/current/pets/add',
-    async (petInfo, thunkAPI) => {
-        try {
-            const token = localStorage.getItem('token');
-            const data = await axios.post('users/current/pets/add', petInfo, {
-                headers: { Authorization: `Bearer ${token}` },
+export const addPet = createAsyncThunk<
+    CurrentFullResponse,
+    FormValues,
+    { rejectValue: ApiError }
+>('auth/current/pets/add', async (petInfo, thunkAPI) => {
+    try {
+        const token = localStorage.getItem('token');
+        const data = await axios.post('users/current/pets/add', petInfo, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return data.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
             });
-            return data.data;
-        } catch (error) {
-            let message = 'Unknown error';
-
-            if (error instanceof Error) {
-                message = error.message;
-            }
-
-            return thunkAPI.rejectWithValue(message);
         }
-    },
-);
+
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
+    }
+});
 
 export const removePet = createAsyncThunk<CurrentFullResponse, string>(
     'auth/current/pets/remove',

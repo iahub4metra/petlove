@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { BaseUser, FullUser } from '../../components/App/types';
+import type {
+    BaseUser,
+    FullUser,
+    operationStatus,
+} from '../../components/App/types';
 import {
     addPet,
     editUser,
@@ -28,15 +32,13 @@ interface InitialValue {
     error: string | null;
     favCountBeforeAdding: number;
     showPopUpFirstFav: boolean;
+    operations: {
+        signIn: operationStatus;
+        signUp: operationStatus;
+        signOut: operationStatus;
+        addPet: operationStatus;
+    };
 }
-
-const initialState: InitialValue = {
-    user: null,
-    loading: false,
-    error: null,
-    favCountBeforeAdding: 0,
-    showPopUpFirstFav: false,
-};
 
 const handlePending = (state: InitialValue) => {
     state.loading = true;
@@ -46,6 +48,32 @@ const handlePending = (state: InitialValue) => {
 const handleRejected = (state: InitialValue, action: RejectedAction) => {
     state.loading = false;
     state.error = action.error.message || 'Unknown error';
+};
+
+const initialState: InitialValue = {
+    user: null,
+    loading: false,
+    error: null,
+    favCountBeforeAdding: 0,
+    showPopUpFirstFav: false,
+    operations: {
+        signIn: {
+            status: 'idle',
+            error: null,
+        },
+        signUp: {
+            status: 'idle',
+            error: null,
+        },
+        signOut: {
+            status: 'idle',
+            error: null,
+        },
+        addPet: {
+            status: 'idle',
+            error: null,
+        },
+    },
 };
 
 const authSlice = createSlice({
@@ -58,34 +86,53 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(signUp.pending, handlePending)
+            .addCase(signUp.pending, (state) => {
+                state.operations.signUp.status = 'loading';
+                state.operations.signUp.error = null;
+            })
             .addCase(signUp.fulfilled, (state, action) => {
                 state.user = action.payload;
-                state.loading = false;
+                state.operations.signUp.status = 'succeeded';
+                state.operations.signUp.error = null;
             })
-            .addCase(signUp.rejected, handleRejected)
-            .addCase(signIn.pending, handlePending)
+            .addCase(signUp.rejected, (state, action) => {
+                state.operations.signUp.status = 'failed';
+                state.operations.signUp.error = action.payload ?? null;
+            })
+            .addCase(signIn.pending, (state) => {
+                state.operations.signIn.status = 'loading';
+                state.operations.signIn.error = null;
+            })
             .addCase(signIn.fulfilled, (state, action) => {
                 state.user = action.payload;
-                state.loading = false;
+                state.operations.signIn.status = 'succeeded';
+                state.operations.signIn.error = null;
             })
-            .addCase(signIn.rejected, handleRejected)
-            .addCase(signOut.pending, handlePending)
+            .addCase(signIn.rejected, (state, action) => {
+                state.operations.signIn.status = 'failed';
+                state.operations.signIn.error = action.payload ?? null;
+            })
+            .addCase(signOut.pending, (state) => {
+                state.operations.signOut.status = 'loading';
+                state.operations.signOut.error = null;
+            })
             .addCase(signOut.fulfilled, (state) => {
                 state.user = null;
-                state.loading = false;
+                state.operations.signOut.status = 'succeeded';
+                state.operations.signOut.error = null;
             })
-            .addCase(signOut.rejected, handleRejected)
+            .addCase(signOut.rejected, (state, action) => {
+                state.operations.signOut.status = 'failed';
+                state.operations.signOut.error = action.payload ?? null;
+            })
             .addCase(getCurrentUserFull.pending, handlePending)
             .addCase(getCurrentUserFull.fulfilled, (state, action) => {
                 state.user = action.payload;
-                state.loading = false;
             })
             .addCase(getCurrentUserFull.rejected, handleRejected)
             .addCase(editUser.pending, handlePending)
             .addCase(editUser.fulfilled, (state, action) => {
                 state.user = action.payload;
-                state.loading = false;
             })
             .addCase(editUser.rejected, handleRejected)
             .addCase(addNoticeToFavourite.pending, (state) => {
@@ -94,7 +141,6 @@ const authSlice = createSlice({
                         state.user.noticesFavorites.length;
                 }
                 state.error = null;
-                state.loading = false;
             })
             .addCase(addNoticeToFavourite.fulfilled, (state, action) => {
                 if (state.user && 'noticesFavorites' in state.user) {
@@ -133,11 +179,19 @@ const authSlice = createSlice({
                     }
                 }
             })
-            .addCase(addPet.pending, handlePending)
-            .addCase(addPet.rejected, handleRejected)
+            .addCase(addPet.pending, (state) => {
+                state.operations.addPet.status = 'loading';
+                state.operations.addPet.error = null;
+            })
+            .addCase(addPet.rejected, (state, action) => {
+                state.operations.addPet.status = 'failed';
+                state.operations.addPet.error = action.payload ?? null;
+            })
             .addCase(addPet.fulfilled, (state, action) => {
                 if (state.user && 'pets' in state.user) {
                     state.user.pets = action.payload.pets;
+                    state.operations.addPet.status = 'succeeded';
+                    state.operations.addPet.error = null;
                 }
             })
             .addCase(removePet.pending, handlePending)
