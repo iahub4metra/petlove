@@ -14,6 +14,8 @@ import {
     manageModalNotice,
 } from '../../redux/uiState/slice';
 import { selectUser } from '../../redux/auth/selectors';
+import { Button } from '@mui/material';
+import { selectNoticesStatus } from '../../redux/notices/selectors';
 
 export interface NoticesItemProps {
     pet: Pet;
@@ -28,6 +30,7 @@ export default function NoticesItem({
 }: NoticesItemProps) {
     const dispatch: AppDispatch = useDispatch();
     const user = useSelector(selectUser);
+    const noticeByIdStatus = useSelector(selectNoticesStatus).noticeById;
     const userID = user && '_id' in user ? user._id : undefined;
     const noticesFavorites =
         user && 'noticesFavorites' in user ? user.noticesFavorites : undefined;
@@ -35,7 +38,9 @@ export default function NoticesItem({
     const handleLearnMore = async () => {
         if (localStorage.getItem('token')) {
             await dispatch(getNoticeById(pet._id));
-            dispatch(manageModalNotice(true));
+            if (noticeByIdStatus.status === 'succeeded') {
+                dispatch(manageModalNotice(true));
+            }
         } else {
             dispatch(manageModalAttention(true));
         }
@@ -60,14 +65,15 @@ export default function NoticesItem({
             value: pet.category.charAt(0).toUpperCase() + pet.category.slice(1),
         },
     ];
+
     return (
         <div
             className={`bg-white rounded-[16px] p-[24px] max-w-[335px] w-full md:w-[342px] md:max-w-[342px] ${
                 viewed
                     ? 'xl:w-[320px] xl:max-w-[320px] xl:p-3.5'
                     : favourite
-                    ? 'xl:w-[320px] xl:max-w-[320px] xl:p-3.5'
-                    : 'xl:w-[363px] xl:max-w-[363px]'
+                      ? 'xl:w-[320px] xl:max-w-[320px] xl:p-3.5'
+                      : 'xl:w-[363px] xl:max-w-[363px]'
             } `}
         >
             <img
@@ -77,8 +83,8 @@ export default function NoticesItem({
                     viewed
                         ? 'xl:w-[292px] md:mb-3.5 md:h-[162px]'
                         : favourite
-                        ? 'xl:w-[292px] md:mb-3.5 md:h-[162px]'
-                        : 'xl:w-[315px]'
+                          ? 'xl:w-[292px] md:mb-3.5 md:h-[162px]'
+                          : 'xl:w-[315px]'
                 }`}
             />
             <div>
@@ -119,13 +125,40 @@ export default function NoticesItem({
                         viewed ? 'flex' : 'flex gap-2.5 items-center'
                     }`}
                 >
-                    <button
+                    <Button
                         type="button"
                         onClick={handleLearnMore}
-                        className="bg-[#F6B83D] grow hover:scale-[1.01] hover:bg-[#F9B020] active:scale-[1.01] transition-all duration-500 text-white text-[14px] font-medium leading-[18px] tracking-[-0.42px] p-[14px] text-center cursor-pointer rounded-[30px]"
+                        loading={noticeByIdStatus.status === 'loading'}
+                        sx={{
+                            bgcolor: '#F6B83D',
+                            flexGrow: '1',
+                            transition:
+                                'all 500ms cubic-bezier(0.4, 0, 0.2, 1)',
+                            color: 'white',
+                            fontSize: '14px',
+                            fontWeight: 'medium',
+                            lineHeight: '18px',
+                            letterSpacing: '-0.42px',
+                            cursor: 'pointer',
+                            borderRadius: '30px',
+                            textAlign: 'center',
+                            padding: '14px',
+                            textTransform: 'none',
+                            ':hover': {
+                                bgcolor: '#F9B020]',
+                                transform: 'scale(1.01)',
+                            },
+                            ':active': {
+                                transform: 'scale(1.01)',
+                            },
+                            '@media screen and (min-width: 768px)': {
+                                fontSize: '16px',
+                                lineHeight: '20px',
+                            },
+                        }}
                     >
                         Learn more
-                    </button>
+                    </Button>
                     {!viewed && (
                         <button
                             type="button"

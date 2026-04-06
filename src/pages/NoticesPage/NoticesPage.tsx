@@ -6,8 +6,8 @@ import { useEffect } from 'react';
 import { getAllNotices } from '../../redux/notices/operations';
 import {
     selectFilters,
-    selectLoading,
     selectNotices,
+    selectNoticesStatus,
     selectPage,
 } from '../../redux/notices/selectors';
 import { selectTotlaPages } from '../../redux/notices/selectors';
@@ -19,9 +19,11 @@ export default function NoticesPage() {
     const dispatch: AppDispatch = useDispatch();
     const page = useSelector(selectPage);
     const totalPages = useSelector(selectTotlaPages);
-    const loading = useSelector(selectLoading);
     const filters = useSelector(selectFilters);
     const notices = useSelector(selectNotices);
+    const noticesStatus = useSelector(selectNoticesStatus).allNotices;
+    const loading =
+        noticesStatus.status === 'loading' || noticesStatus.status === 'failed';
 
     useEffect(() => {
         dispatch(getAllNotices({ page, filters }));
