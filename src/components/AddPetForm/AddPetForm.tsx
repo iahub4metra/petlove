@@ -15,14 +15,16 @@ import { IoCloudUploadOutline } from 'react-icons/io5';
 import { LiaPawSolid } from 'react-icons/lia';
 import { FiCalendar } from 'react-icons/fi';
 import { addPetSchema } from '../../utils/validationSchema';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { AppDispatch } from '../../redux/store';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getSpecies } from '../../redux/notices/operations';
 import { DateField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { Link, useNavigate } from 'react-router';
 import { addPet } from '../../redux/auth/operations';
+import { selectAuthOperations } from '../../redux/auth/selectors';
+import ErrorBanner from '../Errors/ErrorBanner';
 
 export interface FormValues {
     title: string;
@@ -50,8 +52,10 @@ export default function AddPetForm() {
     const [species, setSpecies] = useState<string[]>();
     const [photoURL, setPhotoURL] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
+    const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
     const navigate = useNavigate();
-
+    const addPetStatus = useSelector(selectAuthOperations).addPet;
+    const prevStatus = useRef(addPetStatus.status);
     const {
         register,
         reset,
@@ -109,12 +113,23 @@ export default function AddPetForm() {
 
     const imgSrc = photoURL || imgUrlInputValue;
     const onSubmit = (data: FormValues) => {
-        console.log('submitted', data);
         dispatch(addPet(data));
-        reset();
-        setPhotoURL('');
-        navigate('/profile');
+        if (addPetStatus.status === 'succeeded') {
+            reset();
+            setPhotoURL('');
+            navigate('/profile');
+        }
     };
+
+    useEffect(() => {
+        if (
+            prevStatus.current !== 'failed' &&
+            addPetStatus.status === 'failed'
+        ) {
+            setOpenSnackbar(true);
+        }
+        prevStatus.current = addPetStatus.status;
+    }, [addPetStatus.status]);
 
     return (
         <div className="bg-white rounded-[30px] px-5 py-[28px] md:py-[40px] md:flex flex-col items-center mt-2.5 md:mt-[16px] xl:mt-0 xl:px-[80px]">
@@ -622,14 +637,48 @@ export default function AddPetForm() {
                     >
                         Back
                     </Link>
-                    <button
+                    <Button
                         type="submit"
-                        className="text-white transition-colors hover:bg-[#F9B020] text-[14px] md:text-[16px] leading-[18px] md:leading-5 tracking-[-0.36px] font-bold rounded-[30px] bg-[#F6B83D] py-[12px] md:py-[14px] px-[26px] md:px-[58px] cursor-pointer"
+                        loading={addPetStatus.status === 'loading'}
+                        sx={{
+                            cursor: 'pointer',
+                            color: 'white',
+                            transition:
+                                'all 250ms cubic-bezier(0.4, 0, 0.2, 1)',
+                            fontSize: '14px',
+                            lineHeight: '18px',
+                            letterSpacing: '-0.36px',
+                            fontWeight: 'bold',
+                            borderRadius: '30px',
+                            bgcolor: '#F6B83D',
+                            paddingBlock: '12px',
+                            paddingInline: '26px',
+                            ':hover': {
+                                bgcolor: '#F9B020',
+                            },
+                            '@media screen and (min-width: 768px)': {
+                                fontSize: '16px',
+                                lineHeight: '20px',
+                                paddingBlock: '14px',
+                                paddingInline: '58px',
+                            },
+                        }}
                     >
                         Submit
-                    </button>
+                    </Button>
                 </div>
             </form>
+            <ErrorBanner
+                open={openSnackbar}
+                onClose={() => setOpenSnackbar(false)}
+                message={
+                    addPetStatus.error?.status === 404
+                        ? 'Service unavaileble. Try later'
+                        : addPetStatus.error?.status === 500
+                          ? 'Server error. Try again later'
+                          : ''
+                }
+            />
         </div>
     );
 }
