@@ -33,6 +33,11 @@ export type ByIdResponse = Pet & {
     };
 };
 
+type ApiError = {
+    message: string;
+    status?: number;
+};
+
 export const mapNoticeToNotice = (notice: ByIdResponse): Pet => {
     return {
         _id: notice._id,
@@ -51,33 +56,38 @@ export const mapNoticeToNotice = (notice: ByIdResponse): Pet => {
     };
 };
 
-export const getAllNotices = createAsyncThunk<AllResponse, AllPayload>(
-    'notices/all',
-    async ({ page, filters }, thunkAPI) => {
-        try {
-            const response = await axios.get('/notices', {
-                params: { page, ...filters },
+export const getAllNotices = createAsyncThunk<
+    AllResponse,
+    AllPayload,
+    { rejectValue: ApiError }
+>('notices/all', async ({ page, filters }, thunkAPI) => {
+    try {
+        const response = await axios.get('/notices', {
+            params: { page, ...filters },
+        });
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
             });
-            return response.data;
-        } catch (error) {
-            let message = 'Unknown error';
-
-            if (error instanceof Error) {
-                message = error.message;
-            }
-
-            return thunkAPI.rejectWithValue(message);
         }
-    },
-);
+
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
+    }
+});
 
 export const getNoticeById = createAsyncThunk<
     { forModal: ByIdResponse; forList: Pet },
-    string
+    string,
+    { rejectValue: ApiError }
 >('notices/byId', async (id, thunkAPI) => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`notices/${id}`, {
+        const response = await axios.get(`notice/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         return {
@@ -85,13 +95,16 @@ export const getNoticeById = createAsyncThunk<
             forList: mapNoticeToNotice(response.data),
         };
     } catch (error) {
-        let message = 'Unknown error';
-
-        if (error instanceof Error) {
-            message = error.message;
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
+            });
         }
 
-        return thunkAPI.rejectWithValue(message);
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
     }
 });
 

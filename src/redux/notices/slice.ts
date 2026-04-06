@@ -1,12 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { Pet } from '../../components/App/types';
+import type { operationStatus, Pet } from '../../components/App/types';
 import { getAllNotices, getNoticeById, type ByIdResponse } from './operations';
 
 interface InitialValue {
     notices: Pet[];
     page: number;
     totalPages: number;
-    loading: boolean;
     selectedPet: ByIdResponse | null;
     filters: {
         keyword: string;
@@ -18,13 +17,16 @@ interface InitialValue {
         byPrice: boolean | null;
         byPopularity: boolean | null;
     };
+    operations: {
+        allNotices: operationStatus;
+        noticeById: operationStatus;
+    };
 }
 
 const initialState: InitialValue = {
     notices: [],
     page: 1,
     totalPages: 0,
-    loading: false,
     selectedPet: null,
     filters: {
         keyword: '',
@@ -36,14 +38,13 @@ const initialState: InitialValue = {
         byPopularity: null,
         byPrice: null,
     },
-};
-
-const handlePending = (state: InitialValue) => {
-    state.loading = true;
-};
-
-const handleRejected = (state: InitialValue) => {
-    state.loading = false;
+    operations: {
+        allNotices: {
+            status: 'idle',
+            error: null,
+        },
+        noticeById: { status: 'idle', error: null },
+    },
 };
 
 const noticesSlice = createSlice({
@@ -59,20 +60,34 @@ const noticesSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getAllNotices.pending, handlePending)
+            .addCase(getAllNotices.pending, (state) => {
+                state.operations.allNotices.status = 'loading';
+                state.operations.allNotices.error = null;
+            })
             .addCase(getAllNotices.fulfilled, (state, action) => {
                 state.notices = action.payload.results;
                 state.totalPages = action.payload.totalPages;
                 state.page = action.payload.page;
-                state.loading = false;
+                state.operations.allNotices.status = 'succeeded';
+                state.operations.allNotices.error = null;
             })
-            .addCase(getAllNotices.rejected, handleRejected)
-            .addCase(getNoticeById.pending, handlePending)
+            .addCase(getAllNotices.rejected, (state, action) => {
+                state.operations.allNotices.status = 'failed';
+                state.operations.allNotices.error = action.payload ?? null;
+            })
+            .addCase(getNoticeById.pending, (state) => {
+                state.operations.noticeById.status = 'loading';
+                state.operations.noticeById.error = null;
+            })
             .addCase(getNoticeById.fulfilled, (state, action) => {
                 state.selectedPet = action.payload.forModal;
-                state.loading = false;
+                state.operations.noticeById.status = 'succeeded';
+                state.operations.noticeById.error = null;
             })
-            .addCase(getNoticeById.rejected, handleRejected);
+            .addCase(getNoticeById.rejected, (state, action) => {
+                state.operations.noticeById.status = 'failed';
+                state.operations.noticeById.error = action.payload ?? null;
+            });
     },
 });
 
