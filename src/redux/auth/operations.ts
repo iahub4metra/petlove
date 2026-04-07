@@ -91,6 +91,7 @@ export const signOut = createAsyncThunk<
         );
         localStorage.removeItem('token');
     } catch (error) {
+        localStorage.removeItem('token');
         if (axios.isAxiosError(error)) {
             return thunkAPI.rejectWithValue({
                 message: error.response?.data?.message || error.message,

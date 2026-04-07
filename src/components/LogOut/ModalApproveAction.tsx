@@ -1,15 +1,22 @@
-import { Modal } from '@mui/material';
+import { Button, Modal } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLogoutModal } from '../../redux/uiState/selectors';
 import type { AppDispatch } from '../../redux/store';
 import { IoClose } from 'react-icons/io5';
 import { manageLogoutModal } from '../../redux/uiState/slice';
 import { signOut } from '../../redux/auth/operations';
+import { selectAuthOperations } from '../../redux/auth/selectors';
 
 export default function ModalApproveAction() {
     const dispatch: AppDispatch = useDispatch();
     const isOpen = useSelector(selectLogoutModal);
     const token = localStorage.getItem('token');
+    const signOutStatus = useSelector(selectAuthOperations).signOut;
+
+    const handleSignOut = async () => {
+        await dispatch(signOut(token));
+        dispatch(manageLogoutModal(false));
+    };
 
     return (
         <>
@@ -38,16 +45,42 @@ export default function ModalApproveAction() {
                             Already leaving?
                         </p>
                         <div className="flex gap-2">
-                            <button
+                            <Button
                                 type="button"
-                                onClick={() => {
-                                    dispatch(signOut(token));
-                                    dispatch(manageLogoutModal(false));
+                                loading={signOutStatus.status === 'loading'}
+                                onClick={handleSignOut}
+                                sx={{
+                                    transition:
+                                        'all 500ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                    cursor: 'pointer',
+                                    paddingBlock: '12px',
+                                    textAlign: 'center',
+                                    bgcolor: '#F6B83D',
+                                    borderRadius: '30px',
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    lineHeight: '18px',
+                                    letterSpacing: '-0.42px',
+                                    fontSize: '14px',
+                                    paddingInline: '57px',
+                                    '@media screen and (min-width:768px)': {
+                                        paddingBlock: '14px',
+                                        fontSize: '16px',
+                                        lineHeight: '20px',
+                                        letterSpacing: '-0.48px',
+                                    },
+                                    ':hover': {
+                                        transform: 'scale(1.05)',
+                                        bgcolor: '#F9B020',
+                                    },
+                                    ':active': {
+                                        transform: 'scale(1.05)',
+                                        bgcolor: '#F9B020',
+                                    },
                                 }}
-                                className="cursor-pointer hover:scale-[1.05] active:scale-[1.05] hover:bg-[#F9B020] active:bg-[#F9B020] py-[12px] md:py-[14px] md:text-[16px] md:leading-5 md:tracking-[-0.48px] text-center bg-[#F6B83D] rounded-[30px] px-[57px] text-white text-[14px] font-bold leading-[18px] tracking-[-0.42px] transition-all duration-500"
                             >
                                 Yes
-                            </button>
+                            </Button>
                             <button
                                 type="button"
                                 onClick={() =>
