@@ -87,7 +87,7 @@ export const getNoticeById = createAsyncThunk<
 >('notices/byId', async (id, thunkAPI) => {
     try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`notice/${id}`, {
+        const response = await axios.get(`notices/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         return {
