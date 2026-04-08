@@ -13,7 +13,7 @@ import {
     manageModalAttention,
     manageModalNotice,
 } from '../../redux/uiState/slice';
-import { selectUser } from '../../redux/auth/selectors';
+import { selectAuthOperations, selectUser } from '../../redux/auth/selectors';
 import { Button } from '@mui/material';
 import { selectNoticesStatus } from '../../redux/notices/selectors';
 
@@ -31,6 +31,7 @@ export default function NoticesItem({
     const dispatch: AppDispatch = useDispatch();
     const user = useSelector(selectUser);
     const noticeByIdStatus = useSelector(selectNoticesStatus).noticeById;
+    const noticeOperationsStatus = useSelector(selectAuthOperations);
     const userID = user && '_id' in user ? user._id : undefined;
     const noticesFavorites =
         user && 'noticesFavorites' in user ? user.noticesFavorites : undefined;
@@ -160,9 +161,32 @@ export default function NoticesItem({
                         Learn more
                     </Button>
                     {!viewed && (
-                        <button
+                        <Button
                             type="button"
-                            className="bg-[#FFF4DF] hover:bg-[#FBE7C1] rounded-full transition-colors duration-500 cursor-pointer w-[46px] md:w-[48px] h-[46px] md:h-[48px] p-[15px]"
+                            loading={
+                                noticeOperationsStatus.addFav.status ===
+                                    'loading' ||
+                                noticeOperationsStatus.removeFav.status ===
+                                    'loading'
+                            }
+                            sx={{
+                                bgcolor: '#FFF4DF',
+                                borderRadius: '100%',
+                                minWidth: '46px',
+                                transition:
+                                    'all 500ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                cursor: 'pointer',
+                                width: '46px',
+                                height: '46px',
+                                padding: '15px',
+                                '@media screen and (min-width: 768px)': {
+                                    width: '48px',
+                                    height: '48px',
+                                },
+                                ':hover': {
+                                    bgcolor: '#FBE7C1',
+                                },
+                            }}
                             onClick={() => {
                                 if (!localStorage.getItem('token')) {
                                     dispatch(manageModalAttention(true));
@@ -171,27 +195,35 @@ export default function NoticesItem({
                         >
                             {!noticesFavorites?.find(
                                 (noticeFav) => noticeFav._id === pet._id,
-                            ) ? (
-                                <CiHeart
-                                    onClick={() =>
-                                        dispatch(
-                                            addNoticeToFavourite({
-                                                notice: pet,
-                                                userID: userID,
-                                            }),
-                                        )
-                                    }
-                                    className="fill-[#F6B83D] w-[18px] h-[18px]"
-                                />
-                            ) : (
-                                <FaRegTrashAlt
-                                    onClick={() =>
-                                        dispatch(removeNoticeFromFavourite(pet))
-                                    }
-                                    className="fill-[#F6B83D] w-[18px] h-[18px]"
-                                />
-                            )}
-                        </button>
+                            )
+                                ? noticeOperationsStatus.addFav.status !==
+                                      'loading' && (
+                                      <CiHeart
+                                          onClick={() =>
+                                              dispatch(
+                                                  addNoticeToFavourite({
+                                                      notice: pet,
+                                                      userID: userID,
+                                                  }),
+                                              )
+                                          }
+                                          className="fill-[#F6B83D] w-[18px] h-[18px]"
+                                      />
+                                  )
+                                : noticeOperationsStatus.removeFav.status !==
+                                      'loading' && (
+                                      <FaRegTrashAlt
+                                          onClick={() =>
+                                              dispatch(
+                                                  removeNoticeFromFavourite(
+                                                      pet,
+                                                  ),
+                                              )
+                                          }
+                                          className="fill-[#F6B83D] w-[18px] h-[18px]"
+                                      />
+                                  )}
+                        </Button>
                     )}
                 </div>
             </div>

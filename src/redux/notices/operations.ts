@@ -184,7 +184,8 @@ export const getLocation = createAsyncThunk<Location[], string>(
 
 export const addNoticeToFavourite = createAsyncThunk<
     Pet,
-    { notice: Pet; userID: string | undefined }
+    { notice: Pet; userID: string | undefined },
+    { rejectValue: ApiError }
 >('notices/favorites/add', async (credentials, thunkAPI) => {
     try {
         const token = localStorage.getItem('token');
@@ -198,34 +199,41 @@ export const addNoticeToFavourite = createAsyncThunk<
 
         return credentials.notice;
     } catch (error) {
-        let message = 'Unknown error';
-
-        if (error instanceof Error) {
-            message = error.message;
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
+            });
         }
 
-        return thunkAPI.rejectWithValue(message);
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
     }
 });
 
-export const removeNoticeFromFavourite = createAsyncThunk<string, Pet>(
-    'notices/favorites/remove',
-    async (notice, thunkAPI) => {
-        try {
-            const token = localStorage.getItem('token');
-            await axios.delete(`notices/favorites/remove/${notice._id}`, {
-                headers: { Authorization: `Bearer ${token}` },
+export const removeNoticeFromFavourite = createAsyncThunk<
+    string,
+    Pet,
+    { rejectValue: ApiError }
+>('notices/favorites/remove', async (notice, thunkAPI) => {
+    try {
+        const token = localStorage.getItem('token');
+        await axios.delete(`notices/favorites/remove/${notice._id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        return notice._id;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
             });
-
-            return notice._id;
-        } catch (error) {
-            let message = 'Unknown error';
-
-            if (error instanceof Error) {
-                message = error.message;
-            }
-
-            return thunkAPI.rejectWithValue(message);
         }
-    },
-);
+
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
+    }
+});

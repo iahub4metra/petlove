@@ -37,6 +37,8 @@ interface InitialValue {
         signUp: operationStatus;
         signOut: operationStatus;
         addPet: operationStatus;
+        addFav: operationStatus;
+        removeFav: operationStatus;
     };
 }
 
@@ -70,6 +72,14 @@ const initialState: InitialValue = {
             error: null,
         },
         addPet: {
+            status: 'idle',
+            error: null,
+        },
+        addFav: {
+            status: 'idle',
+            error: null,
+        },
+        removeFav: {
             status: 'idle',
             error: null,
         },
@@ -141,7 +151,8 @@ const authSlice = createSlice({
                     state.favCountBeforeAdding =
                         state.user.noticesFavorites.length;
                 }
-                state.error = null;
+                state.operations.addFav.status = 'loading';
+                state.operations.addFav.error = null;
             })
             .addCase(addNoticeToFavourite.fulfilled, (state, action) => {
                 if (state.user && 'noticesFavorites' in state.user) {
@@ -155,10 +166,17 @@ const authSlice = createSlice({
                 ) {
                     state.showPopUpFirstFav = true;
                 }
-                state.loading = false;
+                state.operations.addFav.status = 'succeeded';
+                state.operations.addFav.error = null;
             })
-            .addCase(addNoticeToFavourite.rejected, handleRejected)
-            .addCase(removeNoticeFromFavourite.pending, handlePending)
+            .addCase(addNoticeToFavourite.rejected, (state, action) => {
+                state.operations.addFav.status = 'failed';
+                state.operations.addFav.error = action.payload ?? null;
+            })
+            .addCase(removeNoticeFromFavourite.pending, (state) => {
+                state.operations.removeFav.status = 'loading';
+                state.operations.removeFav.error = null;
+            })
             .addCase(removeNoticeFromFavourite.fulfilled, (state, action) => {
                 if (state.user && 'noticesFavorites' in state.user) {
                     state.user.noticesFavorites =
@@ -166,9 +184,13 @@ const authSlice = createSlice({
                             (notice) => notice._id !== action.payload,
                         );
                 }
-                state.loading = false;
+                state.operations.removeFav.status = 'succeeded';
+                state.operations.removeFav.error = null;
             })
-            .addCase(removeNoticeFromFavourite.rejected, handleRejected)
+            .addCase(removeNoticeFromFavourite.rejected, (state, action) => {
+                state.operations.removeFav.status = 'failed';
+                state.operations.removeFav.error = action.payload ?? null;
+            })
             .addCase(getNoticeById.fulfilled, (state, action) => {
                 if (state.user && 'noticesViewed' in state.user) {
                     const exists = state.user.noticesViewed.some(

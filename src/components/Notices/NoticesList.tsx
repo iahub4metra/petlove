@@ -2,8 +2,9 @@ import NoticesItem from './NoticesItem';
 import type { Pet } from '../App/types';
 import { useSelector } from 'react-redux';
 import { selectNoticesStatus } from '../../redux/notices/selectors';
-import { useEffect, useRef, useState } from 'react';
 import ErrorBanner from '../Errors/ErrorBanner';
+import { useErrorBanner } from '../../hooks/useErrorBanner';
+import { selectAuthOperations } from '../../redux/auth/selectors';
 
 interface NoticesListProps {
     notices: Pet[];
@@ -16,19 +17,20 @@ export default function NoticesList({
     viewedList,
     favoriteList,
 }: NoticesListProps) {
-    const [openSnackbarByid, setOpenSnackbarByid] = useState<boolean>(false);
     const noticeByIdStatus = useSelector(selectNoticesStatus).noticeById;
-    const prevStatusByid = useRef(noticeByIdStatus.status);
-
-    useEffect(() => {
-        if (
-            prevStatusByid.current !== 'failed' &&
-            noticeByIdStatus.status === 'failed'
-        ) {
-            setOpenSnackbarByid(true);
-        }
-        prevStatusByid.current = noticeByIdStatus.status;
-    }, [noticeByIdStatus.status]);
+    const noticeOperationsStatus = useSelector(selectAuthOperations);
+    const noticeByIdError = useErrorBanner(
+        noticeByIdStatus.status,
+        noticeByIdStatus.error ?? null,
+    );
+    const noticeAddFavError = useErrorBanner(
+        noticeOperationsStatus.addFav.status,
+        noticeOperationsStatus.addFav.error ?? null,
+    );
+    const noticeRemoveError = useErrorBanner(
+        noticeOperationsStatus.removeFav.status,
+        noticeOperationsStatus.removeFav.error ?? null,
+    );
 
     return (
         <>
@@ -51,11 +53,9 @@ export default function NoticesList({
                     </li>
                 ))}
             </ul>
-            <ErrorBanner
-                open={openSnackbarByid}
-                onClose={() => setOpenSnackbarByid(false)}
-                message={noticeByIdStatus.error?.message ?? null}
-            />
+            <ErrorBanner {...noticeByIdError} />
+            <ErrorBanner {...noticeAddFavError} />
+            <ErrorBanner {...noticeRemoveError} />
         </>
     );
 }
