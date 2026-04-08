@@ -15,7 +15,7 @@ import { IoCloudUploadOutline } from 'react-icons/io5';
 import { LiaPawSolid } from 'react-icons/lia';
 import { FiCalendar } from 'react-icons/fi';
 import { addPetSchema } from '../../utils/validationSchema';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { AppDispatch } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSpecies } from '../../redux/notices/operations';
@@ -25,6 +25,7 @@ import { Link, useNavigate } from 'react-router';
 import { addPet } from '../../redux/auth/operations';
 import { selectAuthOperations } from '../../redux/auth/selectors';
 import ErrorBanner from '../Errors/ErrorBanner';
+import { useErrorBanner } from '../../hooks/useErrorBanner';
 
 export interface FormValues {
     title: string;
@@ -52,10 +53,16 @@ export default function AddPetForm() {
     const [species, setSpecies] = useState<string[]>();
     const [photoURL, setPhotoURL] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
-    const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
     const navigate = useNavigate();
     const addPetStatus = useSelector(selectAuthOperations).addPet;
-    const prevStatus = useRef(addPetStatus.status);
+    const addPetError = useErrorBanner(addPetStatus.status, {
+        message:
+            addPetStatus.error?.status === 404
+                ? 'Service unavaileble. Try later'
+                : addPetStatus.error?.status === 500
+                  ? 'Server error. Try again later'
+                  : '',
+    });
     const {
         register,
         reset,
@@ -120,16 +127,6 @@ export default function AddPetForm() {
             navigate('/profile');
         }
     };
-
-    useEffect(() => {
-        if (
-            prevStatus.current !== 'failed' &&
-            addPetStatus.status === 'failed'
-        ) {
-            setOpenSnackbar(true);
-        }
-        prevStatus.current = addPetStatus.status;
-    }, [addPetStatus.status]);
 
     return (
         <div className="bg-white rounded-[30px] px-5 py-[28px] md:py-[40px] md:flex flex-col items-center mt-2.5 md:mt-[16px] xl:mt-0 xl:px-[80px]">
@@ -668,17 +665,7 @@ export default function AddPetForm() {
                     </Button>
                 </div>
             </form>
-            <ErrorBanner
-                open={openSnackbar}
-                onClose={() => setOpenSnackbar(false)}
-                message={
-                    addPetStatus.error?.status === 404
-                        ? 'Service unavaileble. Try later'
-                        : addPetStatus.error?.status === 500
-                          ? 'Server error. Try again later'
-                          : ''
-                }
-            />
+            <ErrorBanner {...addPetError} />
         </div>
     );
 }

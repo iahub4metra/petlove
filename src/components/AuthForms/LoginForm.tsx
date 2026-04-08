@@ -10,7 +10,7 @@ import {
 import AuthTitle from '../AuthTitle/AuthTitle';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import FormLink from './FormLink';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { loginSchema } from '../../utils/validationSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -22,6 +22,7 @@ import { signIn } from '../../redux/auth/operations';
 import { selectAuthOperations } from '../../redux/auth/selectors';
 import ErrorBanner from '../Errors/ErrorBanner';
 import ErrorState from '../Errors/ErrorState';
+import { useErrorBanner } from '../../hooks/useErrorBanner';
 
 interface FormValues {
     email: string;
@@ -30,10 +31,12 @@ interface FormValues {
 
 export default function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
-    const [openSnackbar, setOpenSnackbar] = useState(false);
     const dispatch: AppDispatch = useDispatch();
     const signInStatus = useSelector(selectAuthOperations).signIn;
-    const prevStatus = useRef(signInStatus.status);
+    const signInError = useErrorBanner(
+        signInStatus.status,
+        signInStatus.error ?? null,
+    );
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -72,16 +75,6 @@ export default function LoginForm() {
         if (errors.email) return '#EF2447';
         return '#08AA83';
     };
-
-    useEffect(() => {
-        if (
-            prevStatus.current !== 'failed' &&
-            signInStatus.status === 'failed'
-        ) {
-            setOpenSnackbar(true);
-        }
-        prevStatus.current = signInStatus.status;
-    }, [signInStatus.status]);
 
     if (signInStatus.error?.status === 500) {
         return <ErrorState error={signInStatus.error} />;
@@ -280,11 +273,7 @@ export default function LoginForm() {
                 </Button>
             </form>
             <FormLink />
-            <ErrorBanner
-                open={openSnackbar}
-                message={signInStatus.error?.message ?? null}
-                onClose={() => setOpenSnackbar(false)}
-            />
+            <ErrorBanner {...signInError} />
         </div>
     );
 }

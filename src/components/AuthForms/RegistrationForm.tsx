@@ -10,7 +10,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import AuthTitle from '../AuthTitle/AuthTitle';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import FormLink from './FormLink';
 import { registrationSchema } from '../../utils/validationSchema';
@@ -22,6 +22,7 @@ import { signUp } from '../../redux/auth/operations';
 import { selectAuthOperations } from '../../redux/auth/selectors';
 import ErrorBanner from '../Errors/ErrorBanner';
 import ErrorState from '../Errors/ErrorState';
+import { useErrorBanner } from '../../hooks/useErrorBanner';
 
 interface FormValues {
     name: string;
@@ -32,10 +33,12 @@ interface FormValues {
 
 export default function RegistrationForm() {
     const [showPassword, setShowPassword] = useState(false);
-    const [openSnackbar, setOpenSnackbar] = useState(false);
     const dispatch: AppDispatch = useDispatch();
     const signUpStatus = useSelector(selectAuthOperations).signUp;
-    const prevStatus = useRef(signUpStatus.status);
+    const signUpError = useErrorBanner(
+        signUpStatus.status,
+        signUpStatus.error ?? null,
+    );
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -82,16 +85,6 @@ export default function RegistrationForm() {
             reset();
         }
     };
-
-    useEffect(() => {
-        if (
-            prevStatus.current !== 'failed' &&
-            signUpStatus.status === 'failed'
-        ) {
-            setOpenSnackbar(true);
-        }
-        prevStatus.current = signUpStatus.status;
-    }, [signUpStatus.status]);
 
     if (signUpStatus.error?.status === 500) {
         return <ErrorState error={signUpStatus.error} />;
@@ -410,11 +403,7 @@ export default function RegistrationForm() {
                 >
                     Log in
                 </Button>
-                <ErrorBanner
-                    open={openSnackbar}
-                    onClose={() => setOpenSnackbar(false)}
-                    message={signUpStatus.error?.message ?? null}
-                />
+                <ErrorBanner {...signUpError} />
             </form>
             <FormLink />
         </div>
