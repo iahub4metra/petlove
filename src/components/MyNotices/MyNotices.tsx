@@ -50,7 +50,7 @@ export default function MyNotices() {
                         </p>
                     </div>
                 ) : (
-                    <div className="h-[928px] md:h-[864px] xl:h-[868px] overflow-y-scroll">
+                    <div className="h-[928px] md:h-[864px] xl:h-[868px] overflow-y-scroll custom-scrollbar">
                         <NoticesList notices={noticesFavorites} favoriteList />
                     </div>
                 )
