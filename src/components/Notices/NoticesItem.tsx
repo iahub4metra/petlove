@@ -35,13 +35,16 @@ export default function NoticesItem({
     const userID = user && '_id' in user ? user._id : undefined;
     const noticesFavorites =
         user && 'noticesFavorites' in user ? user.noticesFavorites : undefined;
+    const isLoadingBtnState =
+        (noticeOperationsStatus.addFav.status === 'loading' &&
+            noticeOperationsStatus.addFav.currentId === pet._id) ||
+        (noticeOperationsStatus.removeFav.status === 'loading' &&
+            noticeOperationsStatus.removeFav.currentId === pet._id);
 
     const handleLearnMore = async () => {
         if (localStorage.getItem('token')) {
-            await dispatch(getNoticeById(pet._id));
-            if (noticeByIdStatus.status === 'succeeded') {
-                dispatch(manageModalNotice(true));
-            }
+            await dispatch(getNoticeById(pet._id)).unwrap();
+            dispatch(manageModalNotice(true));
         } else {
             dispatch(manageModalAttention(true));
         }
@@ -129,7 +132,10 @@ export default function NoticesItem({
                     <Button
                         type="button"
                         onClick={handleLearnMore}
-                        loading={noticeByIdStatus.status === 'loading'}
+                        loading={
+                            noticeByIdStatus.status === 'loading' &&
+                            noticeByIdStatus.currentId === pet._id
+                        }
                         sx={{
                             bgcolor: '#F6B83D',
                             flexGrow: '1',
@@ -163,12 +169,7 @@ export default function NoticesItem({
                     {!viewed && (
                         <Button
                             type="button"
-                            loading={
-                                noticeOperationsStatus.addFav.status ===
-                                    'loading' ||
-                                noticeOperationsStatus.removeFav.status ===
-                                    'loading'
-                            }
+                            loading={isLoadingBtnState}
                             sx={{
                                 bgcolor: '#FFF4DF',
                                 borderRadius: '100%',
