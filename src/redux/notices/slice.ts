@@ -19,7 +19,7 @@ interface InitialValue {
     };
     operations: {
         allNotices: operationStatus;
-        noticeById: operationStatus;
+        noticeById: operationStatus & { currentId: string | null };
     };
 }
 
@@ -43,7 +43,7 @@ const initialState: InitialValue = {
             status: 'idle',
             error: null,
         },
-        noticeById: { status: 'idle', error: null },
+        noticeById: { status: 'idle', error: null, currentId: null },
     },
 };
 
@@ -75,17 +75,20 @@ const noticesSlice = createSlice({
                 state.operations.allNotices.status = 'failed';
                 state.operations.allNotices.error = action.payload ?? null;
             })
-            .addCase(getNoticeById.pending, (state) => {
+            .addCase(getNoticeById.pending, (state, action) => {
                 state.operations.noticeById.status = 'loading';
+                state.operations.noticeById.currentId = action.meta.arg;
                 state.operations.noticeById.error = null;
             })
             .addCase(getNoticeById.fulfilled, (state, action) => {
                 state.selectedPet = action.payload.forModal;
                 state.operations.noticeById.status = 'succeeded';
+                state.operations.noticeById.currentId = null;
                 state.operations.noticeById.error = null;
             })
             .addCase(getNoticeById.rejected, (state, action) => {
                 state.operations.noticeById.status = 'failed';
+                state.operations.noticeById.currentId = null;
                 state.operations.noticeById.error = action.payload ?? null;
             });
     },

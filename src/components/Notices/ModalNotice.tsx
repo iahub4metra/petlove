@@ -1,4 +1,4 @@
-import { Modal } from '@mui/material';
+import { Button, Modal } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectModalNotice } from '../../redux/uiState/selectors';
 import { selectSelectedPet } from '../../redux/notices/selectors';
@@ -7,7 +7,7 @@ import { manageModalNotice } from '../../redux/uiState/slice';
 import { IoClose } from 'react-icons/io5';
 import { FaStar } from 'react-icons/fa6';
 import { CiHeart } from 'react-icons/ci';
-import { selectUser } from '../../redux/auth/selectors';
+import { selectAuthOperations, selectUser } from '../../redux/auth/selectors';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import {
     addNoticeToFavourite,
@@ -19,6 +19,12 @@ export default function ModalNotice() {
     const pet = useSelector(selectSelectedPet);
     const dispatch: AppDispatch = useDispatch();
     const user = useSelector(selectUser);
+    const noticeOperationsStatus = useSelector(selectAuthOperations);
+    const isLoading =
+        (noticeOperationsStatus.addFav.status === 'loading' &&
+            noticeOperationsStatus.addFav.currentId === pet?._id) ||
+        (noticeOperationsStatus.removeFav.status === 'loading' &&
+            noticeOperationsStatus.removeFav.currentId === pet?._id);
     const userID = user && '_id' in user ? user._id : undefined;
     const noticesFavorites =
         user && 'noticesFavorites' in user ? user.noticesFavorites : undefined;
@@ -117,7 +123,7 @@ export default function ModalNotice() {
                     {!noticesFavorites?.find(
                         (notice) => notice._id === pet?._id,
                     ) ? (
-                        <button
+                        <Button
                             onClick={() =>
                                 dispatch(
                                     addNoticeToFavourite({
@@ -126,21 +132,63 @@ export default function ModalNotice() {
                                     }),
                                 )
                             }
-                            className="flex py-[12px] px-[31px] bg-[#F6B83D] rounded-[30px] text-white text-[16px] font-medium leading-5 tracking-[-0.48px] gap-2 items-center cursor-pointer "
+                            loading={isLoading}
+                            sx={{
+                                display: 'flex',
+                                paddingBlock: '12px',
+                                paddingInline: '31px',
+                                bgcolor: '#F6B83D',
+                                borderRadius: '30px',
+                                textTransform: 'none',
+                                color: 'white',
+                                fontSize: '16px',
+                                fontWeight: '500',
+                                lineHeight: '20px',
+                                letterSpacing: '-0.48px',
+                                gap: '8px',
+                                alignItems: 'center',
+                                cursor: 'pointer',
+                                transition:
+                                    'background-color 500ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                ':hover': {
+                                    bgcolor: '#F9B020]',
+                                },
+                            }}
                         >
                             Add to
                             <CiHeart className="fill-white w-[18px] h-[18px]" />
-                        </button>
+                        </Button>
                     ) : (
-                        <button
+                        <Button
                             onClick={() =>
                                 dispatch(removeNoticeFromFavourite(pet!))
                             }
-                            className="flex py-[12px] px-[31px] bg-[#F6B83D] rounded-[30px] text-white text-[16px] font-medium leading-5 tracking-[-0.48px] gap-2 items-center cursor-pointer "
+                            loading={isLoading}
+                            sx={{
+                                display: 'flex',
+                                paddingBlock: '12px',
+                                paddingInline: '31px',
+                                bgcolor: '#F6B83D',
+                                borderRadius: '30px',
+                                textTransform: 'none',
+                                color: 'white',
+                                fontSize: '16px',
+                                fontWeight: '500',
+                                lineHeight: '20px',
+                                letterSpacing: '-0.48px',
+                                gap: '8px',
+                                alignItems: 'center',
+                                cursor: 'pointer',
+                                transition:
+                                    'background-color 500ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                ':hover': {
+                                    bgcolor: '#F9B020]',
+                                },
+                            }}
                         >
                             Remove
                             <FaRegTrashAlt className="fill-white w-[18px] h-[18px]" />
-                        </button>
+                        </Button>
                     )}
 
                     <a
