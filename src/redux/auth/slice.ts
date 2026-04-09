@@ -37,6 +37,7 @@ interface InitialValue {
         signUp: operationStatus;
         signOut: operationStatus;
         addPet: operationStatus;
+        removePet: operationStatus & { currentId: string | null };
         addFav: operationStatus;
         removeFav: operationStatus;
         editUser: operationStatus;
@@ -75,6 +76,11 @@ const initialState: InitialValue = {
         addPet: {
             status: 'idle',
             error: null,
+        },
+        removePet: {
+            status: 'idle',
+            error: null,
+            currentId: null,
         },
         addFav: {
             status: 'idle',
@@ -230,12 +236,23 @@ const authSlice = createSlice({
                     state.operations.addPet.error = null;
                 }
             })
-            .addCase(removePet.pending, handlePending)
-            .addCase(removePet.rejected, handleRejected)
+            .addCase(removePet.pending, (state, action) => {
+                state.operations.removePet.status = 'loading';
+                state.operations.removePet.currentId = action.meta.arg;
+                state.operations.removePet.error = null;
+            })
+            .addCase(removePet.rejected, (state, action) => {
+                state.operations.removePet.status = 'failed';
+                state.operations.removePet.currentId = null;
+                state.operations.removePet.error = action.payload ?? null;
+            })
             .addCase(removePet.fulfilled, (state, action) => {
                 if (state.user && 'pets' in state.user) {
                     state.user.pets = action.payload.pets;
                 }
+                state.operations.removePet.status = 'succeeded';
+                state.operations.removePet.currentId = null;
+                state.operations.removePet.error = null;
             });
     },
 });

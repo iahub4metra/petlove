@@ -1,9 +1,10 @@
-import { Avatar } from '@mui/material';
+import { Avatar, Button } from '@mui/material';
 import type { UserPets } from '../App/types';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import type { AppDispatch } from '../../redux/store';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { removePet } from '../../redux/auth/operations';
+import { selectAuthOperations } from '../../redux/auth/selectors';
 
 export interface PetsItemProps {
     pet: UserPets;
@@ -11,6 +12,7 @@ export interface PetsItemProps {
 
 export default function PetsItem({ pet }: PetsItemProps) {
     const dispatch: AppDispatch = useDispatch();
+    const removePetStatus = useSelector(selectAuthOperations).removePet;
 
     const petInfo = [
         {
@@ -66,12 +68,34 @@ export default function PetsItem({ pet }: PetsItemProps) {
                 </ul>
             </div>
 
-            <div className="rounded-full p-[7px] bg-[#FFF4DF] absolute top-[12px] right-[12px] xl:p-2.5">
+            <Button
+                sx={{
+                    borderRadius: '100%',
+                    padding: '7px',
+                    bgcolor: '#FFF4DF',
+                    cursor: 'pointer',
+                    position: 'absolute',
+                    top: '12px',
+                    right: '12px',
+                    minWidth: '30px',
+                    width: '30px',
+                    height: '30px',
+                    '@media screen and (min-width: 1280px)': {
+                        padding: '10px',
+                        width: '32px',
+                        height: '32px',
+                    },
+                }}
+                loading={
+                    removePetStatus.status === 'loading' &&
+                    removePetStatus.currentId === pet._id
+                }
+            >
                 <FaRegTrashAlt
-                    className="fill-[#F6B83D] w-[18px] h-[18px]"
+                    className={`fill-[#F6B83D] w-[18px] h-[18px] ${removePetStatus.status === 'loading' && removePetStatus.currentId === pet._id ? 'hidden' : 'block'}`}
                     onClick={() => dispatch(removePet(pet._id))}
                 />
-            </div>
+            </Button>
         </div>
     );
 }

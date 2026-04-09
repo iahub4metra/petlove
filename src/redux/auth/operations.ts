@@ -195,27 +195,28 @@ export const addPet = createAsyncThunk<
     }
 });
 
-export const removePet = createAsyncThunk<CurrentFullResponse, string>(
-    'auth/current/pets/remove',
-    async (petId, thunkAPI) => {
-        try {
-            const token = localStorage.getItem('token');
-            const data = await axios.delete(
-                `users/current/pets/remove/${petId}`,
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                },
-            );
+export const removePet = createAsyncThunk<
+    CurrentFullResponse,
+    string,
+    { rejectValue: ApiError }
+>('auth/current/pets/remove', async (petId, thunkAPI) => {
+    try {
+        const token = localStorage.getItem('token');
+        const data = await axios.delete(`users/current/pets/remov/${petId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
 
-            return data.data;
-        } catch (error) {
-            let message = 'Unknown error';
-
-            if (error instanceof Error) {
-                message = error.message;
-            }
-
-            return thunkAPI.rejectWithValue(message);
+        return data.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
+            });
         }
-    },
-);
+
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
+    }
+});
