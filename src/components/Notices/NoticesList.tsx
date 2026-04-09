@@ -5,6 +5,8 @@ import { selectNoticesStatus } from '../../redux/notices/selectors';
 import ErrorBanner from '../Errors/ErrorBanner';
 import { useErrorBanner } from '../../hooks/useErrorBanner';
 import { selectAuthOperations } from '../../redux/auth/selectors';
+import NoticesListSkeleton from './NoticesListSkeleton';
+import ErrorState from '../Errors/ErrorState';
 
 interface NoticesListProps {
     notices: Pet[];
@@ -17,11 +19,11 @@ export default function NoticesList({
     viewedList,
     favoriteList,
 }: NoticesListProps) {
-    const noticeByIdStatus = useSelector(selectNoticesStatus).noticeById;
+    const noticeStatus = useSelector(selectNoticesStatus);
     const noticeOperationsStatus = useSelector(selectAuthOperations);
     const noticeByIdError = useErrorBanner(
-        noticeByIdStatus.status,
-        noticeByIdStatus.error ?? null,
+        noticeStatus.noticeById.status,
+        noticeStatus.noticeById.error ?? null,
     );
     const noticeAddFavError = useErrorBanner(
         noticeOperationsStatus.addFav.status,
@@ -31,6 +33,14 @@ export default function NoticesList({
         noticeOperationsStatus.removeFav.status,
         noticeOperationsStatus.removeFav.error ?? null,
     );
+
+    if (noticeStatus.allNotices.status === 'loading') {
+        return <NoticesListSkeleton />;
+    }
+
+    if (noticeStatus.allNotices.status === 'failed') {
+        return <ErrorState error={noticeStatus.allNotices.error} />;
+    }
 
     return (
         <>
