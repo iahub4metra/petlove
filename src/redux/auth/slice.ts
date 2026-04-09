@@ -39,6 +39,7 @@ interface InitialValue {
         addPet: operationStatus;
         addFav: operationStatus;
         removeFav: operationStatus;
+        editUser: operationStatus;
     };
 }
 
@@ -80,6 +81,10 @@ const initialState: InitialValue = {
             error: null,
         },
         removeFav: {
+            status: 'idle',
+            error: null,
+        },
+        editUser: {
             status: 'idle',
             error: null,
         },
@@ -141,11 +146,19 @@ const authSlice = createSlice({
                 state.user = action.payload;
             })
             .addCase(getCurrentUserFull.rejected, handleRejected)
-            .addCase(editUser.pending, handlePending)
+            .addCase(editUser.pending, (state) => {
+                state.operations.editUser.status = 'loading';
+                state.operations.editUser.error = null;
+            })
             .addCase(editUser.fulfilled, (state, action) => {
                 state.user = action.payload;
+                state.operations.editUser.status = 'succeeded';
+                state.operations.editUser.error = null;
             })
-            .addCase(editUser.rejected, handleRejected)
+            .addCase(editUser.rejected, (state, action) => {
+                state.operations.editUser.status = 'failed';
+                state.operations.editUser.error = action.payload ?? null;
+            })
             .addCase(addNoticeToFavourite.pending, (state) => {
                 if (state.user && 'noticesFavorites' in state.user) {
                     state.favCountBeforeAdding =

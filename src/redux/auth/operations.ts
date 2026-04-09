@@ -147,7 +147,8 @@ export const getCurrentUserFull = createAsyncThunk<CurrentFullResponse, string>(
 
 export const editUser = createAsyncThunk<
     CurrentFullResponse,
-    UserEditCredentials
+    UserEditCredentials,
+    { rejectValue: ApiError }
 >('auth/current/edit', async (userCredentials, thunkAPI) => {
     try {
         const token = localStorage.getItem('token');
@@ -156,13 +157,16 @@ export const editUser = createAsyncThunk<
         });
         return data.data;
     } catch (error) {
-        let message = 'Unknown error';
-
-        if (error instanceof Error) {
-            message = error.message;
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
+            });
         }
 
-        return thunkAPI.rejectWithValue(message);
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
     }
 });
 
