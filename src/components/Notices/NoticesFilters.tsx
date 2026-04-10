@@ -580,7 +580,6 @@ export default function NoticesFilters() {
                                     : base.boxShadow,
                                 '&:hover': {
                                     cursor: 'pointer',
-                                    border: '1px solid #F6B83D',
                                     boxShadow: 'none',
                                 },
                                 '@media screen and (min-width: 768px)': {
