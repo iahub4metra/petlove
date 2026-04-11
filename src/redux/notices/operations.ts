@@ -108,59 +108,71 @@ export const getNoticeById = createAsyncThunk<
     }
 });
 
-export const getCategories = createAsyncThunk<string[]>(
-    'notices/categories',
-    async (_, thunkAPI) => {
-        try {
-            const response = await axios.get('notices/categories');
-            return response.data;
-        } catch (error) {
-            let message = 'Unknown error';
-
-            if (error instanceof Error) {
-                message = error.message;
-            }
-
-            return thunkAPI.rejectWithValue(message);
+export const getCategories = createAsyncThunk<
+    string[],
+    void,
+    { rejectValue: ApiError }
+>('notices/categories', async (_, thunkAPI) => {
+    try {
+        const response = await axios.get('notices/categories');
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
+            });
         }
-    },
-);
 
-export const getSex = createAsyncThunk<string[]>(
-    'notices/sex',
-    async (_, thunkAPI) => {
-        try {
-            const response = await axios.get('notices/sex');
-            return response.data;
-        } catch (error) {
-            let message = 'Unknown error';
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
+    }
+});
 
-            if (error instanceof Error) {
-                message = error.message;
-            }
-
-            return thunkAPI.rejectWithValue(message);
+export const getSex = createAsyncThunk<
+    string[],
+    void,
+    { rejectValue: ApiError }
+>('notices/sex', async (_, thunkAPI) => {
+    try {
+        const response = await axios.get('notices/sex');
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
+            });
         }
-    },
-);
 
-export const getSpecies = createAsyncThunk<string[]>(
-    'notices/species',
-    async (_, thunkAPI) => {
-        try {
-            const response = await axios.get('notices/species');
-            return response.data;
-        } catch (error) {
-            let message = 'Unknown error';
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
+    }
+});
 
-            if (error instanceof Error) {
-                message = error.message;
-            }
-
-            return thunkAPI.rejectWithValue(message);
+export const getSpecies = createAsyncThunk<
+    string[],
+    void,
+    { rejectValue: ApiError }
+>('notices/species', async (_, thunkAPI) => {
+    try {
+        const response = await axios.get('notices/species');
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status,
+            });
         }
-    },
-);
+
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
+    }
+});
 
 export const getLocation = createAsyncThunk<Location[], string>(
     'cities',

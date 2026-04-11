@@ -8,3 +8,4 @@ export const selectSelectedPet = (state: RootState) =>
 export const selectFilters = (state: RootState) => state.notices.filters;
 export const selectNoticesStatus = (state: RootState) =>
     state.notices.operations;
+export const selectNoticeState = (state: RootState) => state.notices;

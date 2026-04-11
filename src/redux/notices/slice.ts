@@ -1,6 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { operationStatus, Pet } from '../../components/App/types';
-import { getAllNotices, getNoticeById, type ByIdResponse } from './operations';
+import {
+    getAllNotices,
+    getCategories,
+    getNoticeById,
+    getSex,
+    getSpecies,
+    type ByIdResponse,
+} from './operations';
 
 interface InitialValue {
     notices: Pet[];
@@ -20,7 +27,13 @@ interface InitialValue {
     operations: {
         allNotices: operationStatus;
         noticeById: operationStatus & { currentId: string | null };
+        getCategories: operationStatus;
+        getSex: operationStatus;
+        getSpecies: operationStatus;
     };
+    categories: string[];
+    species: string[];
+    genders: string[];
 }
 
 const initialState: InitialValue = {
@@ -44,7 +57,22 @@ const initialState: InitialValue = {
             error: null,
         },
         noticeById: { status: 'idle', error: null, currentId: null },
+        getCategories: {
+            status: 'idle',
+            error: null,
+        },
+        getSex: {
+            status: 'idle',
+            error: null,
+        },
+        getSpecies: {
+            status: 'idle',
+            error: null,
+        },
     },
+    categories: [],
+    genders: [],
+    species: [],
 };
 
 const noticesSlice = createSlice({
@@ -90,6 +118,45 @@ const noticesSlice = createSlice({
                 state.operations.noticeById.status = 'failed';
                 state.operations.noticeById.currentId = null;
                 state.operations.noticeById.error = action.payload ?? null;
+            })
+            .addCase(getCategories.pending, (state) => {
+                state.operations.getCategories.status = 'loading';
+                state.operations.getCategories.error = null;
+            })
+            .addCase(getCategories.fulfilled, (state, action) => {
+                state.categories = action.payload;
+                state.operations.getCategories.status = 'succeeded';
+                state.operations.getCategories.error = null;
+            })
+            .addCase(getCategories.rejected, (state, action) => {
+                state.operations.getCategories.status = 'failed';
+                state.operations.getCategories.error = action.payload ?? null;
+            })
+            .addCase(getSex.pending, (state) => {
+                state.operations.getSex.status = 'loading';
+                state.operations.getSex.error = null;
+            })
+            .addCase(getSex.fulfilled, (state, action) => {
+                state.genders = action.payload;
+                state.operations.getSex.status = 'succeeded';
+                state.operations.getSex.error = null;
+            })
+            .addCase(getSex.rejected, (state, action) => {
+                state.operations.getSex.status = 'failed';
+                state.operations.getSex.error = action.payload ?? null;
+            })
+            .addCase(getSpecies.pending, (state) => {
+                state.operations.getSpecies.status = 'loading';
+                state.operations.getSpecies.error = null;
+            })
+            .addCase(getSpecies.fulfilled, (state, action) => {
+                state.species = action.payload;
+                state.operations.getSpecies.status = 'succeeded';
+                state.operations.getSpecies.error = null;
+            })
+            .addCase(getSpecies.rejected, (state, action) => {
+                state.operations.getSpecies.status = 'failed';
+                state.operations.getSpecies.error = action.payload ?? null;
             });
     },
 });

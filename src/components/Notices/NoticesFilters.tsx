@@ -11,7 +11,10 @@ import {
     getSpecies,
 } from '../../redux/notices/operations';
 import { useEffect, useState } from 'react';
-import { selectFilters } from '../../redux/notices/selectors';
+import {
+    selectFilters,
+    selectNoticeState,
+} from '../../redux/notices/selectors';
 import { useForm } from 'react-hook-form';
 import type { Location } from '../App/types';
 
@@ -40,11 +43,12 @@ type OptionType = { value: string; label: string };
 
 export default function NoticesFilters() {
     const dispatch: AppDispatch = useDispatch();
-    const [categories, setCategories] = useState<string[]>();
-    const [genders, setGender] = useState<string[]>();
-    const [species, setSpecies] = useState<string[]>();
+    //const [genders, setGender] = useState<string[]>();
+    //const [species, setSpecies] = useState<string[]>();
     const [locations, setLocations] = useState<OptionType[]>();
     const filters = useSelector(selectFilters);
+    const { categories, operations, genders, species } =
+        useSelector(selectNoticeState);
 
     const { register, handleSubmit, watch, reset } = useForm<FormValues>();
 
@@ -53,40 +57,22 @@ export default function NoticesFilters() {
     };
 
     useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const result = await dispatch(getCategories()).unwrap();
-                setCategories(result);
-            } catch (err) {
-                console.error('Failed to fetch categories:', err);
-            }
-        };
-        fetchCategories();
-    }, [dispatch]);
+        if (operations.getCategories.status === 'idle') {
+            dispatch(getCategories());
+        }
+    }, [operations.getCategories.status, dispatch]);
 
     useEffect(() => {
-        const fetchGender = async () => {
-            try {
-                const result = await dispatch(getSex()).unwrap();
-                setGender(result);
-            } catch (err) {
-                console.error('Failed to fetch genders:', err);
-            }
-        };
-        fetchGender();
-    }, [dispatch]);
+        if (operations.getSex.status === 'idle') {
+            dispatch(getSex());
+        }
+    }, [operations.getSex.status, dispatch]);
 
     useEffect(() => {
-        const fetchSpecies = async () => {
-            try {
-                const result = await dispatch(getSpecies()).unwrap();
-                setSpecies(result);
-            } catch (err) {
-                console.error('Failed to fetch species:', err);
-            }
-        };
-        fetchSpecies();
-    }, [dispatch]);
+        if (operations.getSpecies.status === 'idle') {
+            dispatch(getSpecies());
+        }
+    }, [operations.getSpecies.status, dispatch]);
 
     const loadLocations = async (inputValue: string) => {
         if (inputValue.length < 3) {
@@ -102,9 +88,8 @@ export default function NoticesFilters() {
             }));
             setLocations(options);
             return options;
-        } catch (err) {
-            console.error('Failed to fetch species:', err);
-            return [];
+        } catch {
+            return [{ value: 'error', label: 'Failed to load locations' }];
         }
     };
 
@@ -151,6 +136,15 @@ export default function NoticesFilters() {
                                 );
                             }}
                             renderValue={(selected) => {
+                                if (
+                                    operations.getCategories.status === 'failed'
+                                ) {
+                                    return (
+                                        <span className="text-[#EF2447] text-[14px] font-medium leading-[18px] tracking-[-0.42px] md:text-[16px] md:leading-5 md:tracking-[-0.48px] font-[Manrope]">
+                                            Failed to load
+                                        </span>
+                                    );
+                                }
                                 if (!selected) {
                                     return (
                                         <span className="text-[#262626] text-[14px] font-medium leading-[18px] tracking-[-0.42px] md:text-[16px] md:leading-5 md:tracking-[-0.48px] font-[Manrope]">
@@ -289,6 +283,13 @@ export default function NoticesFilters() {
                                 );
                             }}
                             renderValue={(selected) => {
+                                if (operations.getSex.status === 'failed') {
+                                    return (
+                                        <span className="text-[#EF2447] text-[14px] font-medium leading-[18px] tracking-[-0.42px] md:text-[16px] md:leading-5 md:tracking-[-0.48px] font-[Manrope]">
+                                            Failed to load
+                                        </span>
+                                    );
+                                }
                                 if (!selected) {
                                     return (
                                         <span className="text-[#262626] text-[14px] font-medium leading-[18px] tracking-[-0.42px] md:text-[16px] md:leading-5 md:tracking-[-0.48px] font-[Manrope]">
@@ -429,6 +430,13 @@ export default function NoticesFilters() {
                                 );
                             }}
                             renderValue={(selected) => {
+                                if (operations.getSpecies.status === 'failed') {
+                                    return (
+                                        <span className="text-[#EF2447] text-[14px] font-medium leading-[18px] tracking-[-0.42px] md:text-[16px] md:leading-5 md:tracking-[-0.48px] font-[Manrope]">
+                                            Failed to load
+                                        </span>
+                                    );
+                                }
                                 if (!selected) {
                                     return (
                                         <span className="text-[#262626] text-[14px] font-medium leading-[18px] tracking-[-0.42px] md:text-[16px] md:leading-5 md:tracking-[-0.48px] font-[Manrope]">
@@ -436,6 +444,7 @@ export default function NoticesFilters() {
                                         </span>
                                     );
                                 }
+
                                 return (
                                     selected.charAt(0).toUpperCase() +
                                     selected.slice(1)
@@ -556,6 +565,7 @@ export default function NoticesFilters() {
                         name="location"
                         placeholder="Location"
                         loadOptions={loadLocations}
+                        isOptionDisabled={(option) => option.value === 'error'}
                         defaultOptions={locations}
                         onChange={(option) =>
                             dispatch(
@@ -720,7 +730,7 @@ export default function NoticesFilters() {
                                 }
                                 className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer peer"
                             />
-                            <p className="leading-[18px] font-[14px] text-[#262626] p-2.5 md:p-3 bg-white rounded-[30px] peer-checked:bg-[#F6B83D] peer-checked:text-white">
+                            <p className="leading-[18px] font-[14px] text-[#262626] p-2.5 md:p-3 bg-white rounded-[30px] peer-checked:bg-[#F6B83D] peer-checked:text-white ">
                                 Popular
                             </p>
                         </label>
