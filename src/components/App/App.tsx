@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Layout from '../Layout/Layout';
 import MobileMenu from '../MobileMenu/MobileMenu';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUserFull } from '../../redux/auth/operations';
 import type { AppDispatch } from '../../redux/store';
 import LoadingScreen from '../LoadingScreen/LoadingScreen';
@@ -11,12 +11,20 @@ import ModalNotice from '../Notices/ModalNotice';
 import ModalAttention from '../ModalAttention/ModalAttention';
 import ModalEditUser from '../ModalEditUser/ModalEditUser';
 import PopUpFavorites from '../PopUpFavorites/PopUpFavorites';
+import { useErrorBanner } from '../../hooks/useErrorBanner';
+import { selectAuthOperations } from '../../redux/auth/selectors';
+import ErrorBanner from '../Errors/ErrorBanner';
 
 export default function App() {
     const [isLoading, setIsLoading] = useState(false);
     const dispatch: AppDispatch = useDispatch();
     const location = useLocation();
     const token = localStorage.getItem('token');
+    const currentUserStatus = useSelector(selectAuthOperations).currentUser;
+    const currentUserError = useErrorBanner(
+        currentUserStatus.status,
+        currentUserStatus.error,
+    );
     useEffect(() => {
         if (token) {
             dispatch(getCurrentUserFull(token));
@@ -41,6 +49,7 @@ export default function App() {
             <ModalAttention />
             <ModalEditUser />
             <PopUpFavorites />
+            <ErrorBanner {...currentUserError} />
         </div>
     );
 }
