@@ -6,16 +6,25 @@ import { IoClose } from 'react-icons/io5';
 import { manageLogoutModal } from '../../redux/uiState/slice';
 import { signOut } from '../../redux/auth/operations';
 import { selectAuthOperations } from '../../redux/auth/selectors';
+import { useLocation, useNavigate } from 'react-router';
 
 export default function ModalApproveAction() {
     const dispatch: AppDispatch = useDispatch();
     const isOpen = useSelector(selectLogoutModal);
     const token = localStorage.getItem('token');
     const signOutStatus = useSelector(selectAuthOperations).signOut;
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const handleSignOut = async () => {
         await dispatch(signOut(token));
         dispatch(manageLogoutModal(false));
+        if (
+            location.pathname === '/profile' ||
+            location.pathname === '/add-pet'
+        ) {
+            navigate('/');
+        }
     };
 
     return (
