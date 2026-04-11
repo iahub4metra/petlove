@@ -19,17 +19,8 @@ import {
     removeNoticeFromFavourite,
 } from '../notices/operations';
 
-type RejectedAction = {
-    type: string;
-    error: {
-        message?: string;
-    };
-};
-
 interface InitialValue {
     user: BaseUser | FullUser | null;
-    loading: boolean;
-    error: string | null;
     favCountBeforeAdding: number;
     showPopUpFirstFav: boolean;
     operations: {
@@ -41,23 +32,12 @@ interface InitialValue {
         addFav: operationStatus & { currentId: string | null };
         removeFav: operationStatus & { currentId: string | null };
         editUser: operationStatus;
+        currentUser: operationStatus;
     };
 }
 
-const handlePending = (state: InitialValue) => {
-    state.loading = true;
-    state.error = null;
-};
-
-const handleRejected = (state: InitialValue, action: RejectedAction) => {
-    state.loading = false;
-    state.error = action.error.message || 'Unknown error';
-};
-
 const initialState: InitialValue = {
     user: null,
-    loading: false,
-    error: null,
     favCountBeforeAdding: 0,
     showPopUpFirstFav: false,
     operations: {
@@ -70,6 +50,10 @@ const initialState: InitialValue = {
             error: null,
         },
         signOut: {
+            status: 'idle',
+            error: null,
+        },
+        currentUser: {
             status: 'idle',
             error: null,
         },
@@ -149,11 +133,22 @@ const authSlice = createSlice({
                 state.operations.signOut.status = 'failed';
                 state.operations.signOut.error = action.payload ?? null;
             })
-            .addCase(getCurrentUserFull.pending, handlePending)
+            .addCase(getCurrentUserFull.pending, (state) => {
+                state.operations.currentUser.status = 'loading';
+                state.operations.currentUser.error = null;
+            })
             .addCase(getCurrentUserFull.fulfilled, (state, action) => {
                 state.user = action.payload;
+                state.operations.currentUser.status = 'succeeded';
+                state.operations.currentUser.error = null;
             })
-            .addCase(getCurrentUserFull.rejected, handleRejected)
+            .addCase(getCurrentUserFull.rejected, (state, action) => {
+                if (action.payload?.status === 401) {
+                    state.user = null;
+                }
+                state.operations.currentUser.status = 'failed';
+                state.operations.currentUser.error = action.payload ?? null;
+            })
             .addCase(editUser.pending, (state) => {
                 state.operations.editUser.status = 'loading';
                 state.operations.editUser.error = null;

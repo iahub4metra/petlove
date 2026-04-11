@@ -1,5 +1,3 @@
-import { useSelector } from 'react-redux';
-import { selectUser } from '../redux/auth/selectors';
 import { Navigate } from 'react-router';
 
 export interface PrivateRouteProps {
@@ -11,7 +9,7 @@ export default function RestrictedRoute({
     component: Component,
     redirectTo = '/',
 }: PrivateRouteProps) {
-    const user = useSelector(selectUser);
+    const token = localStorage.getItem('token');
 
-    return user ? Component : <Navigate to={redirectTo} />;
+    return token ? Component : <Navigate to={redirectTo} />;
 }

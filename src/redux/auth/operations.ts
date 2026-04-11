@@ -105,45 +105,35 @@ export const signOut = createAsyncThunk<
     }
 });
 
-// export const getCurrentUser = createAsyncThunk<CurrentResponse, string>(
-//     'auth/current',
-//     async (token, thunkAPI) => {
-//         try {
-//             const data = await axios.get('users/current', {
-//                 headers: { Authorization: `Bearer ${token}` },
-//             });
-//             return data.data;
-//         } catch (error) {
-//             let message = 'Unknown error';
+export const getCurrentUserFull = createAsyncThunk<
+    CurrentFullResponse,
+    string,
+    { rejectValue: ApiError }
+>('auth/current/full', async (token, thunkAPI) => {
+    try {
+        const data = await axios.get('users/current/full', {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return data.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            const status = error.response?.status;
 
-//             if (error instanceof Error) {
-//                 message = error.message;
-//             }
-
-//             return thunkAPI.rejectWithValue(message);
-//         }
-//     },
-// );
-
-export const getCurrentUserFull = createAsyncThunk<CurrentFullResponse, string>(
-    'auth/current/full',
-    async (token, thunkAPI) => {
-        try {
-            const data = await axios.get('users/current/full', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return data.data;
-        } catch (error) {
-            let message = 'Unknown error';
-
-            if (error instanceof Error) {
-                message = error.message;
+            if (status === 401) {
+                localStorage.removeItem('token');
             }
 
-            return thunkAPI.rejectWithValue(message);
+            return thunkAPI.rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status,
+            });
         }
-    },
-);
+
+        return thunkAPI.rejectWithValue({
+            message: 'Unknown error',
+        });
+    }
+});
 
 export const editUser = createAsyncThunk<
     CurrentFullResponse,
