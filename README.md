@@ -1,54 +1,88 @@
-# React + TypeScript + Vite
+# 🐾 PetLove App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+PetLove is a web application for exploring, managing, and interacting with pet-related listings. Users can browse notices, add favorites, manage their profile, and handle their own pets.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- 🔐 Authentication (Sign In / Sign Up / Logout)
+- 👤 User profile management
+- 🐶 Add / remove user pets
+- 📋 Browse pet notices
+- ❤️ Add / remove favorites
+- 🔍 Filtering and search
+- 📄 View detailed pet information
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🛠️ Tech Stack
+
+- React
+- Redux Toolkit
+- TypeScript
+- MUI (Material UI)
+- Tailwind CSS
+- Axios
+- React Hook Form + Yup
+
+---
+
+## 📂 Project Structure
+
+- `components/` — UI components
+- `redux/` — state management (slices, thunks)
+- `hooks/` — custom hooks
+- `utils/` — helper functions
+- `pages/` — application pages
+
+---
+
+## 🔗 Useful Links
+
+- 📋 [Technical Specification (TS)](https://docs.google.com/spreadsheets/d/1DmQUeGZy_oaXN6yn69ORLzou1ZQRyTMlrAqPSit_clw/edit?pli=1&gid=1134921873#gid=1134921873)
+
+- 📡 [API Documentation (Swagger)](https://petlove.b.goit.study/api-docs/#/)
+
+- 🎨 [Design (Figma)](https://www.figma.com/design/FQcYflpIdWo2HyIDCcDOwp/Petl%F0%9F%92%9Bve--Copy-?node-id=55859-2245&m=dev&t=vnZiXdeYyQTHaebs-1)
+
+---
+
+## ⚙️ Getting Started
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🔐 Authentication
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+The app uses JWT-based authentication.  
+The token is stored in `localStorage` and automatically attached to API requests.
+
+---
+
+## ⚠️ Error Handling
+
+- Global errors — handled via Snackbar / Toast
+- API errors — managed through Redux (`status + error`)
+- 401 — automatic logout
+- 500 — user notification
+
+---
+
+## 📌 Highlights
+
+- Data caching via Redux
+- Granular loading & error states per operation
+- Per-item loading handling using `currentId`
+- Async selects (react-select)
+
+---
+
+## 👨‍💻 Author
+
+Artem Buhai
+[LinkedIn](https://www.linkedin.com/in/artem-buhai/)
