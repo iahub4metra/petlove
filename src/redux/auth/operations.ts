@@ -192,7 +192,7 @@ export const removePet = createAsyncThunk<
 >('auth/current/pets/remove', async (petId, thunkAPI) => {
     try {
         const token = localStorage.getItem('token');
-        const data = await axios.delete(`users/current/pets/remov/${petId}`, {
+        const data = await axios.delete(`users/current/pets/remove/${petId}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
 
